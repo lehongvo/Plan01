@@ -22,6 +22,22 @@ export function useToday(): string | null {
   return useSyncExternalStore(subscribeToClock, todayKey, () => null);
 }
 
+function minutesNow() {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
+
+/** Minutes since local midnight (rechecked every minute); null during the server render. */
+export function useNowMinutes(): number | null {
+  return useSyncExternalStore(subscribeToClock, minutesNow, () => null);
+}
+
+/** "04:30" → 270 */
+export const toMinutes = (time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+};
+
 function toUtc(key: string) {
   const [year, month, day] = key.split("-").map(Number);
   return Date.UTC(year, month - 1, day);

@@ -1,41 +1,61 @@
 "use client";
 
+import Link from "next/link";
 import { PHASES, START_DATE, TOTAL_DAYS } from "@/data/plan";
 import { formatHours, formatStudyDate, useToday } from "@/lib/dates";
 import { useI18n, type Messages } from "@/lib/i18n";
 import { usePlanProgress } from "@/lib/plan-progress";
-import { clampDay, currentStreak, phaseDays, phaseOf, planDayFor, planTotals } from "@/lib/schedule";
+import { clampDay, currentStreak, phaseDays, phaseOf, planDayFor, planTotals, weekOf } from "@/lib/schedule";
 import DayPlan from "./DayPlan";
 
-function headline(t: Messages, todayDay: number | null) {
-  if (todayDay === null) return t.today.defaultTitle;
+function headline(t: Messages, todayDay: number) {
   if (todayDay < 1) return t.today.beforeStart(1 - todayDay);
   if (todayDay > TOTAL_DAYS) return t.today.finished;
   return t.today.dayOf(todayDay, TOTAL_DAYS);
 }
 
+/** Shown until the client knows today's date, so the page never flashes the wrong day. */
+function TodaySkeleton() {
+  return (
+    <div className="skeleton" aria-busy="true">
+      <div style={{ height: 18, width: "45%" }} />
+      <div style={{ height: 36, width: "70%" }} />
+      <div style={{ height: 64 }} />
+      <div style={{ height: 72 }} />
+      <div style={{ height: 220 }} />
+    </div>
+  );
+}
+
 export default function TodayView() {
-  const { lang, t, tr } = useI18n();
+  const { lang, t } = useI18n();
   const progress = usePlanProgress();
   const today = useToday();
-  const todayDay = today ? planDayFor(START_DATE, today) : null;
-  const day = clampDay(todayDay ?? 1);
+
+  if (today === null) {
+    return (
+      <div className="page">
+        <TodaySkeleton />
+      </div>
+    );
+  }
+
+  const todayDay = planDayFor(START_DATE, today);
+  const day = clampDay(todayDay);
   const phase = phaseOf(day, START_DATE);
   const totals = planTotals(progress);
-  const streak = todayDay === null ? 0 : currentStreak(progress, todayDay);
-  const percent = Math.round((totals.done / totals.planned) * 100);
+  const streak = currentStreak(progress, todayDay);
 
   return (
     <div className="page">
-      <header className="hero">
-        <div className="hero-intro">
-          <p className="eyebrow">
-            {t.today.eyebrow} · {formatStudyDate(START_DATE, 0, lang)} →{" "}
-            {formatStudyDate(START_DATE, TOTAL_DAYS - 1, lang)}
-          </p>
+      <header className="today-hero">
+        <div className="today-intro">
+          <Link href="/roadmap" className="eyebrow phase-link">
+            {t.common.phase(phase.id, phase.title)} →
+          </Link>
           <h1>{headline(t, todayDay)}</h1>
-          <p className="lead">
-            {t.common.phase(phase.id, phase.title)}. {t.today.phaseGoal} {tr(phase.goal)}.
+          <p className="today-date">
+            {formatStudyDate(START_DATE, day - 1, lang)} · {t.common.week(weekOf(day, START_DATE))}
           </p>
           <ol className="phase-bar" aria-label={t.today.phases}>
             {PHASES.map((p) => {
@@ -53,22 +73,12 @@ export default function TodayView() {
           </ol>
         </div>
 
-        <div className="card progress-card">
-          <div className="progress-head">
-            <span className="percent">{percent}%</span>
-            <span className="count">{t.today.hoursLabel}</span>
-          </div>
-          <div
-            className="bar"
-            role="progressbar"
-            aria-label={t.today.progressLabel}
-            aria-valuenow={percent}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <span style={{ width: `${percent}%` }} />
-          </div>
-          <dl className="stats">
+        <div className="card today-stats">
+          <dl>
+            <div>
+              <dt>{t.today.streak}</dt>
+              <dd>{t.today.streakDays(streak)}</dd>
+            </div>
             <div>
               <dt>{t.today.hours}</dt>
               <dd>
@@ -83,16 +93,12 @@ export default function TodayView() {
                 <small> / {TOTAL_DAYS}</small>
               </dd>
             </div>
-            <div>
-              <dt>{t.today.streak}</dt>
-              <dd>{t.today.streakDays(streak)}</dd>
-            </div>
           </dl>
-          <p className="start-status">{t.today.tip}</p>
+          {totals.done === 0 && <p className="today-tip">{t.today.tip}</p>}
         </div>
       </header>
 
-      <DayPlan key={day} day={day} onTodayPage />
+      <DayPlan key={day} day={day} variant="today" />
     </div>
   );
 }

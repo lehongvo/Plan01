@@ -38,6 +38,7 @@ const en = {
     cleared: "All progress and notes erased.",
     credit: "Rust course videos:",
     creditBy: (channel: string) => `by ${channel} on YouTube.`,
+    backup: "Backup & data",
   },
   today: {
     eyebrow: "100 days of discipline",
@@ -54,6 +55,8 @@ const en = {
     streak: "Streak",
     streakDays: (n: number) => `${n} day${n === 1 ? "" : "s"}`,
     tip: "Tick “Mark done” after each time slot. Never break the chain two days in a row.",
+    totalHours: "Total",
+    roadmapLink: "Roadmap",
   },
   day: {
     header: (day: number, total: number, week: string) => `Day ${day}/${total} · ${week}`,
@@ -69,9 +72,20 @@ const en = {
     courseDay: (n: number) => `Rust course · Day ${n}/7`,
     courseCounts: (videos: string, tasks: string) => `${videos} videos · ${tasks} tasks`,
     openCourse: "Open course",
+    nowBadge: "Now",
+    now: (track: string, start: string, end: string) => `Now: ${track} · ${start}–${end}`,
+    upNext: (track: string, start: string) => `Next: ${track} at ${start}`,
+    go: "Go",
+    over: "Today's slots are over. Tick what you finished.",
+    dayDone: (hours: string) => `Day complete: ${hours}. Great work, keep the chain going.`,
+    opensOn: (date: string) => `Opens ${date}`,
+    weeklyHint: "This week's checklist",
+    showTasks: (done: number, total: number) => `Show tasks (${done}/${total})`,
+    hideTasks: "Hide tasks",
   },
   roadmap: {
     title: "100-day roadmap",
+    jump: "Jump to this week",
     lead: (weeks: number) => `4 phases, ${weeks} weeks (Monday to Sunday). Click a day to open its detailed schedule.`,
     phaseDays: (n: number, first: number, last: number) => `Phase ${n} · Days ${first}–${last}`,
     fullDays: (done: number, total: number) => `${done}/${total} full days`,
@@ -85,7 +99,7 @@ const en = {
     studied: (done: string, planned: string) => `${done} / ${planned} studied`,
   },
   course: {
-    eyebrow: "I.1 Learn Rust · Week 1 of the 100-day plan",
+    eyebrow: "I.1 Learn Rust · Days 1–7 of the 100-day plan",
     titlePrefix: "Course",
     lead: (videos: number, channel: string) =>
       `${videos} videos by ${channel} split into 7 days, studied in the daily Rust slot: watch, do Rustlings and one mini exercise so it sticks.`,
@@ -160,6 +174,7 @@ const vi: Messages = {
     cleared: "Đã xoá toàn bộ tiến độ và ghi chú.",
     credit: "Video khoá Rust:",
     creditBy: (channel) => `của ${channel} trên YouTube.`,
+    backup: "Sao lưu & dữ liệu",
   },
   today: {
     eyebrow: "100 ngày kỷ luật",
@@ -176,6 +191,8 @@ const vi: Messages = {
     streak: "Chuỗi",
     streakDays: (n) => `${n} ngày`,
     tip: "Tick “Xong slot” sau mỗi khung giờ. Đừng để đứt chuỗi 2 ngày liên tiếp.",
+    totalHours: "Tổng",
+    roadmapLink: "Lộ trình",
   },
   day: {
     header: (day, total, week) => `Ngày ${day}/${total} · ${week}`,
@@ -191,9 +208,20 @@ const vi: Messages = {
     courseDay: (n) => `Khoá Rust · Ngày ${n}/7`,
     courseCounts: (videos, tasks) => `${videos} video · ${tasks} bài tập`,
     openCourse: "Mở khoá học",
+    nowBadge: "Đang học",
+    now: (track, start, end) => `Đang diễn ra: ${track} · ${start}–${end}`,
+    upNext: (track, start) => `Tiếp theo: ${track} lúc ${start}`,
+    go: "Tới",
+    over: "Đã hết các khung giờ hôm nay. Tick những gì bạn đã làm xong.",
+    dayDone: (hours) => `Hoàn thành ngày: ${hours}. Làm tốt lắm, giữ chuỗi nhé.`,
+    opensOn: (date) => `Mở vào ${date}`,
+    weeklyHint: "Checklist của tuần này",
+    showTasks: (done, total) => `Xem việc (${done}/${total})`,
+    hideTasks: "Ẩn việc",
   },
   roadmap: {
     title: "Lộ trình 100 ngày",
+    jump: "Tới tuần này",
     lead: (weeks) => `4 giai đoạn, ${weeks} tuần (Thứ Hai đến Chủ nhật). Bấm vào một ngày để mở lịch chi tiết của ngày đó.`,
     phaseDays: (n, first, last) => `Giai đoạn ${n} · Ngày ${first}–${last}`,
     fullDays: (done, total) => `${done}/${total} ngày trọn vẹn`,
@@ -206,7 +234,7 @@ const vi: Messages = {
     studied: (done, planned) => `${done} / ${planned} đã học`,
   },
   course: {
-    eyebrow: "I.1 Learn Rust · Tuần 1 của lộ trình 100 ngày",
+    eyebrow: "I.1 Learn Rust · Ngày 1–7 của lộ trình 100 ngày",
     titlePrefix: "Khoá",
     lead: (videos, channel) =>
       `${videos} video của ${channel} chia thành 7 ngày, học trong slot Rust mỗi ngày: xem video, làm Rustlings và một bài mini để nhớ lâu.`,

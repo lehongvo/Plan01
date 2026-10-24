@@ -51,42 +51,44 @@ export default function SiteFooter() {
         <p className="footer-settings">
           {t.footer.schedule(formatFullDate(START_DATE, 0, lang), formatFullDate(START_DATE, TOTAL_DAYS - 1, lang))}
         </p>
-        <div className="footer-actions">
-          <button type="button" className="button" onClick={download}>
-            {t.footer.export}
-          </button>
-          <button type="button" className="button" onClick={() => fileRef.current?.click()}>
-            {t.footer.import}
-          </button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="application/json,.json"
-            hidden
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) restore(file);
-              event.target.value = "";
-            }}
-          />
-          <button
-            type="button"
-            className={`button${confirmingReset ? " button-danger" : ""}`}
-            onClick={reset}
-            onBlur={() => setConfirmingReset(false)}
-          >
-            {confirmingReset ? t.footer.confirmReset : t.footer.reset}
-          </button>
-        </div>
-        <p className="footer-note">
-          {t.footer.note}
-          {notice && (
-            <span className="footer-message" role="status">
-              {" "}
-              {t.footer[notice]}
-            </span>
-          )}
-        </p>
+        <details className="backup">
+          <summary>{t.footer.backup}</summary>
+          <div className="backup-body">
+            <p className="footer-note">{t.footer.note}</p>
+            <div className="footer-actions">
+              <button type="button" className="button" onClick={download}>
+                {t.footer.export}
+              </button>
+              <button type="button" className="button" onClick={() => fileRef.current?.click()}>
+                {t.footer.import}
+              </button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="application/json,.json"
+                hidden
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) restore(file);
+                  event.target.value = "";
+                }}
+              />
+              <button
+                type="button"
+                className={`button${confirmingReset ? " button-danger" : ""}`}
+                onClick={reset}
+                onBlur={() => setConfirmingReset(false)}
+              >
+                {confirmingReset ? t.footer.confirmReset : t.footer.reset}
+              </button>
+            </div>
+            {notice && (
+              <p className="footer-message" role="status">
+                {t.footer[notice]}
+              </p>
+            )}
+          </div>
+        </details>
         <p className="credit">
           {t.footer.credit}{" "}
           <a href={course.playlist} target="_blank" rel="noreferrer">

@@ -27,6 +27,8 @@ export default function Roadmap() {
   const startDate = START_DATE;
   const todayDay = today ? planDayFor(startDate, today) : null;
   const weeks = planWeeks(startDate);
+  const currentWeek =
+    todayDay !== null && todayDay >= 1 && todayDay <= TOTAL_DAYS ? weekOf(todayDay, startDate) : null;
 
   return (
     <div className="page">
@@ -36,6 +38,11 @@ export default function Roadmap() {
         </p>
         <h1>{t.roadmap.title}</h1>
         <p className="lead">{t.roadmap.lead(weeks.length)}</p>
+        {currentWeek !== null && (
+          <a className="button button-primary jump" href={`#week-${currentWeek}`}>
+            {t.roadmap.jump} ↓
+          </a>
+        )}
       </header>
 
       <ol className="phase-cards">
@@ -66,9 +73,9 @@ export default function Roadmap() {
       <div className="weeks">
         {weeks.map((week) => {
           const days = daysOfWeek(week, startDate);
-          const current = todayDay !== null && todayDay >= 1 && todayDay <= TOTAL_DAYS && weekOf(todayDay, startDate) === week;
+          const current = week === currentWeek;
           return (
-            <section key={week} className={`card week-card${current ? " is-active" : ""}`}>
+            <section key={week} id={`week-${week}`} className={`card week-card${current ? " is-active" : ""}`}>
               <div className="card-head">
                 <h3>
                   {t.common.week(week)}
