@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 // The few parts of the YouTube IFrame API this app uses.
 type YTPlayer = {
@@ -66,6 +67,7 @@ type Props = {
 };
 
 export default function YouTubePlayer({ request, rate, onEnded }: Props) {
+  const { t } = useI18n();
   const hostRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const loadedKeyRef = useRef<string | null>(null);
@@ -148,13 +150,9 @@ export default function YouTubePlayer({ request, rate, onEnded }: Props) {
       <div ref={hostRef} className="player-frame" />
       {(apiFailed || blocked) && (
         <div className="player-fallback">
-          <p>
-            {apiFailed
-              ? "Không tải được trình phát YouTube."
-              : `Video này không phát được trong trang (mã lỗi ${error?.code}).`}
-          </p>
+          <p>{apiFailed ? t.course.playerFailed : t.course.videoBlocked(error?.code ?? 0)}</p>
           <a className="button button-primary" href={youtubeUrl} target="_blank" rel="noreferrer">
-            Mở trên YouTube
+            {t.course.openOnYoutube}
           </a>
         </div>
       )}

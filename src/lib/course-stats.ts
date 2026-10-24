@@ -1,5 +1,5 @@
 import type { StudyDay, Video } from "@/data/course";
-import { taskKey, type Progress } from "./progress";
+import { courseTaskKey, type CourseProgress } from "./course-progress";
 
 export type DayStats = {
   videosDone: number;
@@ -12,7 +12,7 @@ export type DayStats = {
   complete: boolean;
 };
 
-export function getDayStats(day: StudyDay, progress: Progress): DayStats {
+export function getDayStats(day: StudyDay, progress: CourseProgress): DayStats {
   let videosDone = 0;
   let videoSeconds = 0;
   let watchedSeconds = 0;
@@ -23,7 +23,7 @@ export function getDayStats(day: StudyDay, progress: Progress): DayStats {
       watchedSeconds += video.seconds;
     }
   }
-  const tasksDone = day.tasks.filter((_, i) => progress.tasks[taskKey(day.day, i)]).length;
+  const tasksDone = day.tasks.filter((_, i) => progress.tasks[courseTaskKey(day.day, i)]).length;
   const minutesPerTask = day.tasks.length ? day.practice / day.tasks.length : 0;
   return {
     videosDone,
@@ -37,12 +37,8 @@ export function getDayStats(day: StudyDay, progress: Progress): DayStats {
 }
 
 /** The first unwatched video after `fromId`, wrapping to the start of the day; null when all are watched. */
-export function nextUnwatched(day: StudyDay, progress: Progress, fromId?: string): Video | null {
+export function nextUnwatched(day: StudyDay, progress: CourseProgress, fromId?: string): Video | null {
   const start = fromId ? day.videos.findIndex((v) => v.id === fromId) + 1 : 0;
   const ordered = [...day.videos.slice(start), ...day.videos.slice(0, start)];
   return ordered.find((v) => v.id !== fromId && !progress.watched[v.id]) ?? null;
-}
-
-export function lessonLabel(video: Video) {
-  return video.lesson === null ? "Tip" : `Bài ${video.lesson}`;
 }

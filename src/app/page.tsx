@@ -1,5 +1,8 @@
-import StudyApp from "@/components/StudyApp";
+import type { Metadata } from "next";
+import TodayView from "@/components/TodayView";
+
+export const metadata: Metadata = { title: "Today" };
 
 export default function Home() {
-  return <StudyApp />;
+  return <TodayView />;
 }

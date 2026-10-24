@@ -1,21 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import type { StudyDay } from "@/data/course";
+import type { StudyDay, Video } from "@/data/course";
+import { PLAYBACK_RATES, courseActions, courseTaskKey, type CourseProgress } from "@/lib/course-progress";
+import { getDayStats, nextUnwatched } from "@/lib/course-stats";
 import { formatClock, formatMinutes } from "@/lib/dates";
-import { PLAYBACK_RATES, progressActions, taskKey, type Progress } from "@/lib/progress";
-import { getDayStats, lessonLabel, nextUnwatched } from "@/lib/stats";
+import { useI18n, type Messages } from "@/lib/i18n";
 import { CheckIcon, ExternalIcon } from "./icons";
+import LinkList from "./LinkList";
 import YouTubePlayer, { type PlayRequest } from "./YouTubePlayer";
 
 type Props = {
   day: StudyDay;
-  progress: Progress;
-  dateLabel: string | null;
+  progress: CourseProgress;
+  dateLabel: string;
   isToday: boolean;
 };
 
-export default function DayView({ day, progress, dateLabel, isToday }: Props) {
+const lessonLabel = (video: Video, t: Messages) =>
+  video.lesson === null ? t.course.tip : t.course.lesson(video.lesson);
+
+export default function CourseDay({ day, progress, dateLabel, isToday }: Props) {
+  const { lang, t, tr } = useI18n();
   const [picked, setPicked] = useState<PlayRequest | null>(null);
   const stats = getDayStats(day, progress);
 
@@ -32,7 +38,7 @@ export default function DayView({ day, progress, dateLabel, isToday }: Props) {
   }
 
   function finish(videoId: string) {
-    progressActions.setWatched(videoId, true);
+    courseActions.setWatched(videoId, true);
     const next = nextUnwatched(day, progress, videoId);
     if (next) play(next.id);
     else setPicked(request); // last one: keep it on screen instead of jumping back
@@ -41,26 +47,26 @@ export default function DayView({ day, progress, dateLabel, isToday }: Props) {
   function toggleWatched(videoId: string, watched: boolean) {
     // Pin the current video so ticking boxes never swaps what is playing.
     if (!picked) setPicked(request);
-    progressActions.setWatched(videoId, watched);
+    courseActions.setWatched(videoId, watched);
   }
 
-  const titleId = `day-${day.day}-title`;
-  const notesId = `day-${day.day}-notes`;
+  const titleId = `course-day-${day.day}-title`;
+  const notesId = `course-day-${day.day}-notes`;
 
   return (
     <section className="day" aria-labelledby={titleId}>
       <header>
         <p className="eyebrow">
-          Ngày {day.day}/7{dateLabel && ` · ${dateLabel}`}
-          {isToday && <span className="badge">Hôm nay</span>}
+          {t.course.dayOf(day.day)} · {dateLabel}
+          {isToday && <span className="badge">{t.common.today}</span>}
         </p>
-        <h2 id={titleId}>{day.title}</h2>
-        <p className="day-topic">{day.topic}</p>
+        <h2 id={titleId}>{tr(day.title)}</h2>
+        <p className="day-topic">{tr(day.topic)}</p>
         <ul className="meta">
-          <li>{day.videos.length} video</li>
-          <li>{formatMinutes(stats.videoSeconds / 60)} xem video</li>
-          <li>~{day.practice} phút thực hành</li>
-          <li>≈ {formatMinutes(stats.minutesTotal)} tổng</li>
+          <li>{t.course.videoCount(day.videos.length)}</li>
+          <li>{t.course.videoTime(formatMinutes(stats.videoSeconds / 60, lang))}</li>
+          <li>{t.course.practice(day.practice)}</li>
+          <li>{t.course.total(formatMinutes(stats.minutesTotal, lang))}</li>
         </ul>
       </header>
 
@@ -71,50 +77,48 @@ export default function DayView({ day, progress, dateLabel, isToday }: Props) {
             <div className="now-playing">
               <div className="now-text">
                 <p className="now-label">
-                  {lessonLabel(current)} · {formatClock(current.seconds)}
+                  {lessonLabel(current, t)} · {formatClock(current.seconds)}
                 </p>
                 <p className="now-title">{current.title}</p>
               </div>
               <div className="player-actions">
-                <div className="speed" role="group" aria-label="Tốc độ phát">
+                <div className="speed" role="group" aria-label={t.course.speed}>
                   {PLAYBACK_RATES.map((rate) => (
                     <button
                       key={rate}
                       type="button"
                       aria-pressed={progress.rate === rate}
-                      onClick={() => progressActions.setRate(rate)}
+                      onClick={() => courseActions.setRate(rate)}
                     >
                       {rate}×
                     </button>
                   ))}
                 </div>
-                <button type="button" className="button button-primary" onClick={() => finish(current.id)}>
-                  <CheckIcon />
-                  Đã xem, bài tiếp
-                </button>
-                <a
-                  className="button"
-                  href={`https://www.youtube.com/watch?v=${current.id}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  YouTube
-                  <ExternalIcon />
-                </a>
+                <div className="player-buttons">
+                  <button type="button" className="button button-primary" onClick={() => finish(current.id)}>
+                    <CheckIcon />
+                    {t.course.watchedNext}
+                  </button>
+                  <a
+                    className="button"
+                    href={`https://www.youtube.com/watch?v=${current.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    YouTube
+                    <ExternalIcon />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="card">
             <div className="card-head">
-              <h3>Video</h3>
-              <span className="count">
-                {stats.videosDone}/{day.videos.length} đã xem
-              </span>
+              <h3>{t.course.videoList}</h3>
+              <span className="count">{t.course.watchedCount(stats.videosDone, day.videos.length)}</span>
             </div>
-            {stats.videosDone === day.videos.length && (
-              <p className="notice">Đã xem hết video của ngày {day.day}. Làm nốt phần thực hành để hoàn thành ngày.</p>
-            )}
+            {stats.videosDone === day.videos.length && <p className="notice">{t.course.allWatched(day.day)}</p>}
             <ol className="video-list">
               {day.videos.map((video) => {
                 const watched = Boolean(progress.watched[video.id]);
@@ -124,23 +128,25 @@ export default function DayView({ day, progress, dateLabel, isToday }: Props) {
                     key={video.id}
                     className={`video-row${active ? " is-active" : ""}${watched ? " is-done" : ""}`}
                   >
-                    <input
-                      type="checkbox"
-                      className="check"
-                      checked={watched}
-                      onChange={(event) => toggleWatched(video.id, event.target.checked)}
-                      aria-label={`Đã xem: ${video.title}`}
-                    />
+                    <label className="check-hit">
+                      <input
+                        type="checkbox"
+                        className="check"
+                        checked={watched}
+                        onChange={(event) => toggleWatched(video.id, event.target.checked)}
+                        aria-label={t.course.markWatched(video.title)}
+                      />
+                    </label>
                     <button
                       type="button"
                       className="video-play"
                       onClick={() => play(video.id)}
                       aria-current={active ? "true" : undefined}
                     >
-                      <span className="video-lesson">{lessonLabel(video)}</span>
+                      <span className="video-lesson">{lessonLabel(video, t)}</span>
                       <span className="video-title">{video.title}</span>
                       <span className="video-time">
-                        {active ? <span className="playing">Đang mở</span> : formatClock(video.seconds)}
+                        {active ? <span className="playing">{t.course.nowPlaying}</span> : formatClock(video.seconds)}
                       </span>
                     </button>
                   </li>
@@ -153,14 +159,14 @@ export default function DayView({ day, progress, dateLabel, isToday }: Props) {
         <aside className="day-column">
           <div className="card">
             <div className="card-head">
-              <h3>Thực hành</h3>
+              <h3>{t.course.practiceTitle}</h3>
               <span className="count">
                 {stats.tasksDone}/{day.tasks.length}
               </span>
             </div>
             <ul className="task-list">
               {day.tasks.map((task, index) => {
-                const key = taskKey(day.day, index);
+                const key = courseTaskKey(day.day, index);
                 return (
                   <li key={key}>
                     <label className="task">
@@ -168,9 +174,9 @@ export default function DayView({ day, progress, dateLabel, isToday }: Props) {
                         type="checkbox"
                         className="check"
                         checked={Boolean(progress.tasks[key])}
-                        onChange={(event) => progressActions.setTaskDone(key, event.target.checked)}
+                        onChange={(event) => courseActions.setTaskDone(key, event.target.checked)}
                       />
-                      <span>{task}</span>
+                      <span>{tr(task)}</span>
                     </label>
                   </li>
                 );
@@ -181,34 +187,25 @@ export default function DayView({ day, progress, dateLabel, isToday }: Props) {
           <div className="card">
             <div className="card-head">
               <h3>
-                <label htmlFor={notesId}>Ghi chú</label>
+                <label htmlFor={notesId}>{t.course.notesTitle}</label>
               </h3>
-              <span className="count">Tự động lưu</span>
+              <span className="count">{t.common.autosave}</span>
             </div>
             <textarea
               id={notesId}
               className="notes"
-              rows={7}
+              rows={6}
               value={progress.notes[day.day] ?? ""}
-              onChange={(event) => progressActions.setNote(day.day, event.target.value)}
-              placeholder="Điều cần nhớ, lỗi hay gặp, câu hỏi để tra thêm…"
+              onChange={(event) => courseActions.setNote(day.day, event.target.value)}
+              placeholder={t.course.notesPlaceholder}
             />
           </div>
 
           <div className="card">
             <div className="card-head">
-              <h3>Tài liệu</h3>
+              <h3>{t.course.resources}</h3>
             </div>
-            <ul className="link-list">
-              {day.links.map((link) => (
-                <li key={link.url}>
-                  <a href={link.url} target="_blank" rel="noreferrer">
-                    {link.label}
-                    <ExternalIcon />
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <LinkList links={day.links} />
           </div>
         </aside>
       </div>

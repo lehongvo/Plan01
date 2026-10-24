@@ -1,5 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
+import Link from "next/link";
+import { Suspense } from "react";
+import LangSwitch from "@/components/LangSwitch";
+import SiteFooter from "@/components/SiteFooter";
+import SiteNav from "@/components/SiteNav";
 import "./globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -9,15 +14,43 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Rust trong 7 ngày",
+  title: { default: "Plan01 · 100 days", template: "%s · Plan01" },
   description:
-    "Lộ trình học playlist Rust for beginners (2025) trong 1 tuần: video, bài tập Rustlings, ghi chú và theo dõi tiến độ.",
+    "A 100-day study plan: Rust (Solana, core chain / Layer 2), Solidity, English and Upwork, with daily slots, weekly checklists and progress tracking.",
+  appleWebApp: { title: "Plan01", statusBarStyle: "default" },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f4f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#12100e" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="vi" className={beVietnamPro.variable}>
-      <body>{children}</body>
+    <html lang="en" className={beVietnamPro.variable}>
+      <body>
+        <header className="site-header">
+          <div className="site-header-inner">
+            <Link href="/" className="brand">
+              <span className="logo" aria-hidden="true">
+                P
+              </span>
+              Plan01
+            </Link>
+            <Suspense>
+              <SiteNav />
+            </Suspense>
+            <LangSwitch />
+          </div>
+        </header>
+        <main>{children}</main>
+        <SiteFooter />
+      </body>
     </html>
   );
 }

@@ -1,3 +1,5 @@
+import type { Text } from "@/lib/text";
+
 export type Video = {
   id: string;
   /** Lesson number shown in the video title; null for the bonus short. */
@@ -8,13 +10,13 @@ export type Video = {
 
 export type StudyDay = {
   day: number;
-  title: string;
-  topic: string;
+  title: Text;
+  topic: Text;
   /** Estimated practice time in minutes. */
   practice: number;
   videos: Video[];
-  tasks: string[];
-  links: { label: string; url: string }[];
+  tasks: Text[];
+  links: { label: Text; url: string }[];
 };
 
 export type Course = {
@@ -32,8 +34,14 @@ export const course: Course = {
   "days": [
     {
       "day": 1,
-      "title": "Nền tảng",
-      "topic": "Cài Rust, Cargo, biến, shadowing, kiểu dữ liệu, hàm, statement vs expression.",
+      "title": {
+        "en": "Foundations",
+        "vi": "Nền tảng"
+      },
+      "topic": {
+        "en": "Installing Rust, Cargo, variables, shadowing, data types, functions, statements vs expressions.",
+        "vi": "Cài Rust, Cargo, biến, shadowing, kiểu dữ liệu, hàm, statement vs expression."
+      },
       "practice": 60,
       "videos": [
         {
@@ -128,10 +136,16 @@ export const course: Course = {
         }
       ],
       "tasks": [
-        "Cài Rust + Rustlings (cargo install rustlings, rustlings init)",
+        {
+          "en": "Install Rust + Rustlings (cargo install rustlings, rustlings init)",
+          "vi": "Cài Rust + Rustlings (cargo install rustlings, rustlings init)"
+        },
         "Rustlings: intro, variables",
         "Rustlings: functions, primitive_types",
-        "Mini: chương trình đổi nhiệt độ °C ↔ °F"
+        {
+          "en": "Mini: °C ↔ °F temperature converter",
+          "vi": "Mini: chương trình đổi nhiệt độ °C ↔ °F"
+        }
       ],
       "links": [
         {
@@ -147,7 +161,10 @@ export const course: Course = {
     {
       "day": 2,
       "title": "Control flow & Ownership",
-      "topic": "if/else, loop, while, for, rồi phần quan trọng nhất của Rust: ownership, String vs &str, clone, references.",
+      "topic": {
+        "en": "if/else, loop, while, for, then the most important part of Rust: ownership, String vs &str, clone, references.",
+        "vi": "if/else, loop, while, for, rồi phần quan trọng nhất của Rust: ownership, String vs &str, clone, references."
+      },
       "practice": 75,
       "videos": [
         {
@@ -249,9 +266,15 @@ export const course: Course = {
       ],
       "tasks": [
         "Rustlings: if",
-        "Mini: FizzBuzz + hàm Fibonacci thứ n",
+        {
+          "en": "Mini: FizzBuzz + an nth Fibonacci function",
+          "vi": "Mini: FizzBuzz + hàm Fibonacci thứ n"
+        },
         "Rustlings: move_semantics",
-        "Đọc Rust Book ch.4 — Ownership"
+        {
+          "en": "Read Rust Book ch.4 — Ownership",
+          "vi": "Đọc Rust Book ch.4 — Ownership"
+        }
       ],
       "links": [
         {
@@ -352,7 +375,10 @@ export const course: Course = {
       "tasks": [
         "Rustlings: structs",
         "Rustlings: enums, options",
-        "Mini: struct Rectangle với area() và can_hold()"
+        {
+          "en": "Mini: a Rectangle struct with area() and can_hold()",
+          "vi": "Mini: struct Rectangle với area() và can_hold()"
+        }
       ],
       "links": [
         {
@@ -372,7 +398,10 @@ export const course: Course = {
     {
       "day": 4,
       "title": "Error handling & Project Grep",
-      "topic": "panic!, Result, propagate lỗi, toán tử ?, rồi build project thật đầu tiên: Grep.",
+      "topic": {
+        "en": "panic!, Result, error propagation, the ? operator, then your first real project: Grep.",
+        "vi": "panic!, Result, propagate lỗi, toán tử ?, rồi build project thật đầu tiên: Grep."
+      },
       "practice": 90,
       "videos": [
         {
@@ -420,8 +449,14 @@ export const course: Course = {
       ],
       "tasks": [
         "Rustlings: error_handling",
-        "Project: code Grep theo video",
-        "Mở rộng Grep: tìm không phân biệt hoa thường (biến môi trường IGNORE_CASE)"
+        {
+          "en": "Project: build Grep along with the video",
+          "vi": "Project: code Grep theo video"
+        },
+        {
+          "en": "Extend Grep: case-insensitive search (IGNORE_CASE env var)",
+          "vi": "Mở rộng Grep: tìm không phân biệt hoa thường (biến môi trường IGNORE_CASE)"
+        }
       ],
       "links": [
         {
@@ -441,7 +476,10 @@ export const course: Course = {
     {
       "day": 5,
       "title": "Collections & Modules",
-      "topic": "Vector, String, format!, HashMap, HashSet; packages, crates, modules, lib.rs và Cargo.",
+      "topic": {
+        "en": "Vector, String, format!, HashMap, HashSet; packages, crates, modules, lib.rs and Cargo.",
+        "vi": "Vector, String, format!, HashMap, HashSet; packages, crates, modules, lib.rs và Cargo."
+      },
       "practice": 75,
       "videos": [
         {
@@ -515,8 +553,14 @@ export const course: Course = {
         "Rustlings: vecs, strings",
         "Rustlings: hashmaps",
         "Rustlings: modules",
-        "Mini: đếm tần suất từ trong một đoạn văn bằng HashMap",
-        "Tách project Grep thành lib.rs + main.rs"
+        {
+          "en": "Mini: count word frequency in a text with a HashMap",
+          "vi": "Mini: đếm tần suất từ trong một đoạn văn bằng HashMap"
+        },
+        {
+          "en": "Split the Grep project into lib.rs + main.rs",
+          "vi": "Tách project Grep thành lib.rs + main.rs"
+        }
       ],
       "links": [
         {
@@ -536,7 +580,10 @@ export const course: Course = {
     {
       "day": 6,
       "title": "Generics, Traits & Lifetimes",
-      "topic": "Generic functions/structs, traits, trait bounds, rồi lifetimes — phần trừu tượng nhất của khoá.",
+      "topic": {
+        "en": "Generic functions/structs, traits, trait bounds, then lifetimes — the most abstract part of the course.",
+        "vi": "Generic functions/structs, traits, trait bounds, rồi lifetimes — phần trừu tượng nhất của khoá."
+      },
       "practice": 75,
       "videos": [
         {
@@ -621,8 +668,14 @@ export const course: Course = {
       "tasks": [
         "Rustlings: generics, traits",
         "Rustlings: lifetimes",
-        "Mini: trait Summary cho 2 struct khác nhau",
-        "Đọc Rust Book 10.3 — Lifetimes"
+        {
+          "en": "Mini: a Summary trait for 2 different structs",
+          "vi": "Mini: trait Summary cho 2 struct khác nhau"
+        },
+        {
+          "en": "Read Rust Book 10.3 — Lifetimes",
+          "vi": "Đọc Rust Book 10.3 — Lifetimes"
+        }
       ],
       "links": [
         {
@@ -642,7 +695,10 @@ export const course: Course = {
     {
       "day": 7,
       "title": "Macros, Closures, Iterators & Smart pointers",
-      "topic": "Declarative macros, closures, iterators, Box và Rc — rồi ôn tập toàn khoá.",
+      "topic": {
+        "en": "Declarative macros, closures, iterators, Box and Rc — then review the whole course.",
+        "vi": "Declarative macros, closures, iterators, Box và Rc — rồi ôn tập toàn khoá."
+      },
       "practice": 75,
       "videos": [
         {
@@ -709,9 +765,18 @@ export const course: Course = {
       "tasks": [
         "Rustlings: macros",
         "Rustlings: iterators, smart_pointers",
-        "Mini: tự viết một macro giống vec!",
-        "Viết lại Grep dùng iterator thay vòng lặp",
-        "Ôn tập: xem lại ghi chú 7 ngày"
+        {
+          "en": "Mini: write your own vec!-like macro",
+          "vi": "Mini: tự viết một macro giống vec!"
+        },
+        {
+          "en": "Rewrite Grep with iterators instead of loops",
+          "vi": "Viết lại Grep dùng iterator thay vòng lặp"
+        },
+        {
+          "en": "Review: go over your notes from all 7 days",
+          "vi": "Ôn tập: xem lại ghi chú 7 ngày"
+        }
       ],
       "links": [
         {

@@ -1,6 +1,8 @@
 import { useSyncExternalStore } from "react";
+import type { Lang } from "./text";
 
 const DAY_MS = 86_400_000;
+const LOCALES: Record<Lang, string> = { en: "en-US", vi: "vi-VN" };
 
 /** Today's local date as YYYY-MM-DD. */
 function todayKey() {
@@ -25,20 +27,35 @@ function toUtc(key: string) {
   return Date.UTC(year, month - 1, day);
 }
 
+const dateAt = (startDate: string, offset: number) => new Date(toUtc(startDate) + offset * DAY_MS);
+
 export function daysBetween(from: string, to: string) {
   return Math.round((toUtc(to) - toUtc(from)) / DAY_MS);
 }
 
-const dayLabel = new Intl.DateTimeFormat("vi-VN", {
-  weekday: "long",
-  day: "2-digit",
-  month: "2-digit",
-  timeZone: "UTC",
-});
+/** 0 = Sunday … 6 = Saturday */
+export function weekdayOf(key: string) {
+  return new Date(toUtc(key)).getUTCDay();
+}
 
-/** "Thứ Hai, 26/10" for the given start date plus an offset in days. */
-export function formatStudyDate(startDate: string, offset: number) {
-  const label = dayLabel.format(new Date(toUtc(startDate) + offset * DAY_MS));
+const shortEn = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+
+const longFormat = {
+  en: new Intl.DateTimeFormat("en-US", { weekday: "long", month: "short", day: "numeric", timeZone: "UTC" }),
+  vi: new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "2-digit", month: "2-digit", timeZone: "UTC" }),
+};
+
+/** "Oct 26" / "26/10" for the start date plus an offset in days. */
+export function formatShortDate(startDate: string, offset: number, lang: Lang) {
+  const date = dateAt(startDate, offset);
+  if (lang === "en") return shortEn.format(date);
+  // Intl's vi-VN short form is "09-11"; Vietnamese readers expect "09/11".
+  return `${String(date.getUTCDate()).padStart(2, "0")}/${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+}
+
+/** "Monday, Oct 26" / "Thứ Hai, 26/10" for the start date plus an offset in days. */
+export function formatStudyDate(startDate: string, offset: number, lang: Lang) {
+  const label = longFormat[lang].format(dateAt(startDate, offset));
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
@@ -47,9 +64,14 @@ export function formatClock(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
-/** 142 → "2h22", 45 → "45 phút" */
-export function formatMinutes(minutes: number) {
+/** 34080 → "568h", 150 → "2.5h" / "2,5h" */
+export function formatHours(minutes: number, lang: Lang) {
+  return `${(Math.round((minutes / 60) * 10) / 10).toLocaleString(LOCALES[lang])}h`;
+}
+
+/** 142 → "2h22", 45 → "45 min" / "45 phút" */
+export function formatMinutes(minutes: number, lang: Lang) {
   const rounded = Math.round(minutes);
-  if (rounded < 60) return `${rounded} phút`;
+  if (rounded < 60) return `${rounded} ${lang === "vi" ? "phút" : "min"}`;
   return `${Math.floor(rounded / 60)}h${String(rounded % 60).padStart(2, "0")}`;
 }
