@@ -1,11 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { PHASES, TOTAL_DAYS, WEEKS, type TrackId } from "@/data/plan";
+import { PHASES, START_DATE, TOTAL_DAYS, type TrackId } from "@/data/plan";
 import { formatShortDate, formatStudyDate, useToday } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n";
 import { usePlanProgress } from "@/lib/plan-progress";
-import { dayMinutes, daysOfWeek, focusFor, focusTasksDone, planDayFor, trackById, weekOf } from "@/lib/schedule";
+import {
+  dayMinutes,
+  daysOfWeek,
+  focusFor,
+  focusTasksDone,
+  hasSlot,
+  phaseDays,
+  planDayFor,
+  planWeeks,
+  trackById,
+  weekOf,
+} from "@/lib/schedule";
 
 const WEEK_TRACKS: TrackId[] = ["rust", "solidity", "english", "interview", "upwork"];
 
@@ -13,8 +24,9 @@ export default function Roadmap() {
   const { lang, t, tr } = useI18n();
   const progress = usePlanProgress();
   const today = useToday();
-  const todayDay = today ? planDayFor(progress.startDate, today) : null;
-  const { startDate } = progress;
+  const startDate = START_DATE;
+  const todayDay = today ? planDayFor(startDate, today) : null;
+  const weeks = planWeeks(startDate);
 
   return (
     <div className="page">
@@ -23,22 +35,23 @@ export default function Roadmap() {
           {formatStudyDate(startDate, 0, lang)} → {formatStudyDate(startDate, TOTAL_DAYS - 1, lang)}
         </p>
         <h1>{t.roadmap.title}</h1>
-        <p className="lead">{t.roadmap.lead}</p>
+        <p className="lead">{t.roadmap.lead(weeks.length)}</p>
       </header>
 
       <ol className="phase-cards">
         {PHASES.map((phase) => {
-          const days = phase.lastDay - phase.firstDay + 1;
+          const span = phaseDays(phase.id, startDate);
+          const days = span.length;
           let complete = 0;
-          for (let d = phase.firstDay; d <= phase.lastDay; d++) if (dayMinutes(d, progress).complete) complete += 1;
-          const active = todayDay !== null && todayDay >= phase.firstDay && todayDay <= phase.lastDay;
+          for (let d = span.first; d <= span.last; d++) if (dayMinutes(d, progress).complete) complete += 1;
+          const active = todayDay !== null && todayDay >= span.first && todayDay <= span.last;
           return (
             <li key={phase.id} className={`card phase-card${active ? " is-active" : ""}`}>
-              <p className="eyebrow">{t.roadmap.phaseDays(phase.id, phase.firstDay, phase.lastDay)}</p>
+              <p className="eyebrow">{t.roadmap.phaseDays(phase.id, span.first, span.last)}</p>
               <h3>{phase.title}</h3>
               <p className="count">
-                {formatShortDate(startDate, phase.firstDay - 1, lang)} –{" "}
-                {formatShortDate(startDate, phase.lastDay - 1, lang)}
+                {formatShortDate(startDate, span.first - 1, lang)} –{" "}
+                {formatShortDate(startDate, span.last - 1, lang)}
               </p>
               <p className="phase-goal">{tr(phase.goal)}</p>
               <div className="bar" aria-hidden="true">
@@ -51,9 +64,9 @@ export default function Roadmap() {
       </ol>
 
       <div className="weeks">
-        {WEEKS.map(({ week }) => {
-          const days = daysOfWeek(week);
-          const current = todayDay !== null && todayDay <= TOTAL_DAYS && weekOf(todayDay) === week;
+        {weeks.map((week) => {
+          const days = daysOfWeek(week, startDate);
+          const current = todayDay !== null && todayDay >= 1 && todayDay <= TOTAL_DAYS && weekOf(todayDay, startDate) === week;
           return (
             <section key={week} className={`card week-card${current ? " is-active" : ""}`}>
               <div className="card-head">
@@ -86,7 +99,7 @@ export default function Roadmap() {
               <ul className="week-tracks">
                 {WEEK_TRACKS.map((track) => {
                   const focus = focusFor(week, track);
-                  if (!focus) return null;
+                  if (!focus || !hasSlot(week, track, startDate)) return null;
                   const tasks = focusTasksDone(week, track, progress);
                   return (
                     <li key={track} className={`track-${track}`}>

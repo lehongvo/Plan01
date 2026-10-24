@@ -59,6 +59,23 @@ export function formatStudyDate(startDate: string, offset: number, lang: Lang) {
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
+const weekdayName = {
+  en: new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "UTC" }),
+  vi: new Intl.DateTimeFormat("vi-VN", { weekday: "long", timeZone: "UTC" }),
+};
+
+/** "Sunday, Oct 25, 2026" / "Chủ Nhật, 25/10/2026" */
+export function formatFullDate(startDate: string, offset: number, lang: Lang) {
+  const date = dateAt(startDate, offset);
+  const weekday = weekdayName[lang].format(date);
+  const day = date.getUTCDate();
+  const month = date.getUTCMonth() + 1;
+  const year = date.getUTCFullYear();
+  if (lang === "en") return `${weekday}, ${shortEn.format(date)}, ${year}`;
+  const label = `${weekday}, ${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
 /** 408 → "6:48" */
 export function formatClock(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;

@@ -1,10 +1,10 @@
 "use client";
 
-import { PHASES, TOTAL_DAYS } from "@/data/plan";
+import { PHASES, START_DATE, TOTAL_DAYS } from "@/data/plan";
 import { formatHours, formatStudyDate, useToday } from "@/lib/dates";
 import { useI18n, type Messages } from "@/lib/i18n";
 import { usePlanProgress } from "@/lib/plan-progress";
-import { clampDay, currentStreak, phaseOf, planDayFor, planTotals } from "@/lib/schedule";
+import { clampDay, currentStreak, phaseDays, phaseOf, planDayFor, planTotals } from "@/lib/schedule";
 import DayPlan from "./DayPlan";
 
 function headline(t: Messages, todayDay: number | null) {
@@ -18,9 +18,9 @@ export default function TodayView() {
   const { lang, t, tr } = useI18n();
   const progress = usePlanProgress();
   const today = useToday();
-  const todayDay = today ? planDayFor(progress.startDate, today) : null;
+  const todayDay = today ? planDayFor(START_DATE, today) : null;
   const day = clampDay(todayDay ?? 1);
-  const phase = phaseOf(day);
+  const phase = phaseOf(day, START_DATE);
   const totals = planTotals(progress);
   const streak = todayDay === null ? 0 : currentStreak(progress, todayDay);
   const percent = Math.round((totals.done / totals.planned) * 100);
@@ -30,23 +30,26 @@ export default function TodayView() {
       <header className="hero">
         <div className="hero-intro">
           <p className="eyebrow">
-            {t.today.eyebrow} · {formatStudyDate(progress.startDate, 0, lang)} →{" "}
-            {formatStudyDate(progress.startDate, TOTAL_DAYS - 1, lang)}
+            {t.today.eyebrow} · {formatStudyDate(START_DATE, 0, lang)} →{" "}
+            {formatStudyDate(START_DATE, TOTAL_DAYS - 1, lang)}
           </p>
           <h1>{headline(t, todayDay)}</h1>
           <p className="lead">
             {t.common.phase(phase.id, phase.title)}. {t.today.phaseGoal} {tr(phase.goal)}.
           </p>
           <ol className="phase-bar" aria-label={t.today.phases}>
-            {PHASES.map((p) => (
-              <li
-                key={p.id}
-                style={{ flexGrow: p.lastDay - p.firstDay + 1 }}
-                className={p.id === phase.id ? "is-active" : p.lastDay < day ? "is-past" : undefined}
-              >
-                <span>{p.title}</span>
-              </li>
-            ))}
+            {PHASES.map((p) => {
+              const span = phaseDays(p.id, START_DATE);
+              return (
+                <li
+                  key={p.id}
+                  style={{ flexGrow: span.length }}
+                  className={p.id === phase.id ? "is-active" : span.last < day ? "is-past" : undefined}
+                >
+                  <span>{p.title}</span>
+                </li>
+              );
+            })}
           </ol>
         </div>
 

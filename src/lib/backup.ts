@@ -21,8 +21,8 @@ export function importBackup(text: string) {
   courseStore.set(course);
 }
 
-/** Clears all progress but keeps the chosen start date. */
+/** Clears all progress and notes. */
 export function resetAll() {
-  planStore.set({ ...planStore.empty, startDate: planStore.get().startDate });
+  planStore.set(planStore.empty);
   courseStore.set(courseStore.empty);
 }

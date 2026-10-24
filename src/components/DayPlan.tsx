@@ -2,19 +2,18 @@
 
 import Link from "next/link";
 import { course } from "@/data/course";
-import { TOTAL_DAYS, type Slot } from "@/data/plan";
-import { QUOTES } from "@/data/quotes";
+import { START_DATE, TOTAL_DAYS, type Slot } from "@/data/plan";
 import { useCourseProgress, type CourseProgress } from "@/lib/course-progress";
 import { getDayStats } from "@/lib/course-stats";
 import { formatHours, formatMinutes, formatStudyDate, useToday } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n";
 import { planActions, slotKey, usePlanProgress, type PlanProgress } from "@/lib/plan-progress";
-import { dayMinutes, focusFor, phaseOf, planDayFor, slotsFor, trackById, weekOf } from "@/lib/schedule";
+import { dayMinutes, focusFor, phaseOf, planDayFor, quoteFor, slotsFor, trackById, weekOf } from "@/lib/schedule";
 import FocusTasks from "./FocusTasks";
 import { CheckIcon } from "./icons";
 import LinkList from "./LinkList";
 
-/** Week 1 Rust slots follow the matching day of the Rust course. */
+/** Rust slots on plan days 1–7 follow the matching day of the Rust course. */
 function CourseSlotInfo({ day, progress }: { day: number; progress: CourseProgress }) {
   const { t, tr } = useI18n();
   const courseDay = course.days[day - 1];
@@ -48,7 +47,7 @@ type SlotCardProps = {
 
 function SlotCard({ day, slot, progress, courseProgress }: SlotCardProps) {
   const { lang, t, tr } = useI18n();
-  const week = weekOf(day);
+  const week = weekOf(day, START_DATE);
   const key = slotKey(day, slot.id);
   const done = Boolean(progress.slots[key]);
   const focus = focusFor(week, slot.track);
@@ -57,7 +56,7 @@ function SlotCard({ day, slot, progress, courseProgress }: SlotCardProps) {
     <li className={`card slot track-${slot.track}${done ? " is-done" : ""}`}>
       <div className="slot-head">
         <div className="slot-when">
-          <span className="track-badge">{slot.label ?? tr(trackById(slot.track).name)}</span>
+          <span className="track-badge">{tr(trackById(slot.track).name)}</span>
           <span className="slot-time">
             {slot.start}–{slot.end} · {formatMinutes(slot.minutes, lang)}
           </span>
@@ -73,7 +72,7 @@ function SlotCard({ day, slot, progress, courseProgress }: SlotCardProps) {
         </button>
       </div>
       {focus && <h3 className="slot-title">{tr(focus.title)}</h3>}
-      {slot.track === "rust" && week === 1 && <CourseSlotInfo day={day} progress={courseProgress} />}
+      {slot.track === "rust" && day <= course.days.length && <CourseSlotInfo day={day} progress={courseProgress} />}
       {focus && <FocusTasks week={week} track={slot.track} focus={focus} progress={progress} />}
       {focus?.links && <LinkList links={focus.links} />}
     </li>
@@ -86,9 +85,9 @@ export default function DayPlan({ day, onTodayPage = false }: { day: number; onT
   const progress = usePlanProgress();
   const courseProgress = useCourseProgress();
   const today = useToday();
-  const isToday = today !== null && planDayFor(progress.startDate, today) === day;
-  const week = weekOf(day);
-  const phase = phaseOf(day);
+  const isToday = today !== null && planDayFor(START_DATE, today) === day;
+  const week = weekOf(day, START_DATE);
+  const phase = phaseOf(day, START_DATE);
   const minutes = dayMinutes(day, progress);
   const notesId = `plan-day-${day}-notes`;
 
@@ -97,10 +96,10 @@ export default function DayPlan({ day, onTodayPage = false }: { day: number; onT
       <header className="plan-day-head">
         <div>
           <p className="eyebrow">
-            {t.day.header(day, TOTAL_DAYS, week)}
+            {t.day.header(day, TOTAL_DAYS, t.common.week(week))}
             {isToday && <span className="badge">{t.common.today}</span>}
           </p>
-          <h2 id={`plan-day-${day}`}>{formatStudyDate(progress.startDate, day - 1, lang)}</h2>
+          <h2 id={`plan-day-${day}`}>{formatStudyDate(START_DATE, day - 1, lang)}</h2>
           <p className="day-topic">{t.common.phase(phase.id, phase.title)}</p>
         </div>
         <nav className="day-nav" aria-label={t.day.navLabel}>
@@ -123,7 +122,7 @@ export default function DayPlan({ day, onTodayPage = false }: { day: number; onT
       </header>
 
       <figure className="quote">
-        <blockquote>{tr(QUOTES[day - 1])}</blockquote>
+        <blockquote>{tr(quoteFor(day, START_DATE))}</blockquote>
       </figure>
 
       <div className={`day-progress${minutes.complete ? " is-complete" : ""}`}>
@@ -138,7 +137,7 @@ export default function DayPlan({ day, onTodayPage = false }: { day: number; onT
       </div>
 
       <ol className="slots">
-        {slotsFor(day, progress.startDate).map((slot) => (
+        {slotsFor(day, START_DATE).map((slot) => (
           <SlotCard key={slot.id} day={day} slot={slot} progress={progress} courseProgress={courseProgress} />
         ))}
       </ol>

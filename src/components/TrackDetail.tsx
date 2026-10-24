@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { WEEKS, type TrackId } from "@/data/plan";
+import { START_DATE, TOTAL_DAYS, type TrackId } from "@/data/plan";
 import { formatHours, formatShortDate, useToday } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n";
 import { usePlanProgress } from "@/lib/plan-progress";
@@ -10,9 +10,9 @@ import {
   focusFor,
   focusTasksDone,
   planDayFor,
-  slotsFor,
   trackById,
   trackMinutes,
+  trackWeeks,
   weekOf,
 } from "@/lib/schedule";
 import FocusTasks from "./FocusTasks";
@@ -24,13 +24,11 @@ export default function TrackDetail({ trackId }: { trackId: TrackId }) {
   const today = useToday();
   const track = trackById(trackId);
   const minutes = trackMinutes(trackId, progress);
-  const todayDay = today ? planDayFor(progress.startDate, today) : null;
-  const currentWeek = todayDay !== null ? weekOf(todayDay) : null;
+  const todayDay = today ? planDayFor(START_DATE, today) : null;
+  const currentWeek =
+    todayDay !== null && todayDay >= 1 && todayDay <= TOTAL_DAYS ? weekOf(todayDay, START_DATE) : null;
 
-  // Only weeks that actually have a slot for this track.
-  const weeks = WEEKS.filter(({ week }) =>
-    daysOfWeek(week).some((day) => slotsFor(day, progress.startDate).some((slot) => slot.track === trackId)),
-  );
+  const weeks = trackWeeks(trackId, START_DATE);
 
   return (
     <div className={`page track-${trackId}`}>
@@ -44,10 +42,10 @@ export default function TrackDetail({ trackId }: { trackId: TrackId }) {
       </header>
 
       <div className="track-weeks">
-        {weeks.map(({ week }) => {
+        {weeks.map((week) => {
           const focus = focusFor(week, trackId);
           if (!focus) return null;
-          const days = daysOfWeek(week);
+          const days = daysOfWeek(week, START_DATE);
           const tasks = focusTasksDone(week, trackId, progress);
           return (
             <section
@@ -57,8 +55,8 @@ export default function TrackDetail({ trackId }: { trackId: TrackId }) {
             >
               <div className="card-head">
                 <p className="eyebrow">
-                  {t.common.week(week)} · {formatShortDate(progress.startDate, days[0] - 1, lang)} –{" "}
-                  {formatShortDate(progress.startDate, days[days.length - 1] - 1, lang)}
+                  {t.common.week(week)} · {formatShortDate(START_DATE, days[0] - 1, lang)} –{" "}
+                  {formatShortDate(START_DATE, days[days.length - 1] - 1, lang)}
                   {week === currentWeek && <span className="badge">{t.common.thisWeek}</span>}
                 </p>
                 <span className="count">

@@ -2,15 +2,15 @@
 
 import { useRef, useState } from "react";
 import { course } from "@/data/course";
+import { START_DATE, TOTAL_DAYS } from "@/data/plan";
 import { exportBackup, importBackup, resetAll } from "@/lib/backup";
+import { formatFullDate } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n";
-import { planActions, usePlanProgress } from "@/lib/plan-progress";
 
 type Notice = "exported" | "imported" | "invalid" | "cleared";
 
 export default function SiteFooter() {
-  const { t } = useI18n();
-  const { startDate } = usePlanProgress();
+  const { lang, t } = useI18n();
   const fileRef = useRef<HTMLInputElement>(null);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [confirmingReset, setConfirmingReset] = useState(false);
@@ -48,15 +48,9 @@ export default function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="footer-inner">
-        <div className="footer-settings">
-          <label htmlFor="start-date">{t.footer.startDate}</label>
-          <input
-            id="start-date"
-            type="date"
-            value={startDate}
-            onChange={(event) => planActions.setStartDate(event.target.value)}
-          />
-        </div>
+        <p className="footer-settings">
+          {t.footer.schedule(formatFullDate(START_DATE, 0, lang), formatFullDate(START_DATE, TOTAL_DAYS - 1, lang))}
+        </p>
         <div className="footer-actions">
           <button type="button" className="button" onClick={download}>
             {t.footer.export}

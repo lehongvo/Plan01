@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import { course } from "@/data/course";
+import { START_DATE } from "@/data/plan";
 import { formatStudyDate, useToday } from "@/lib/dates";
 import { useCourseProgress } from "@/lib/course-progress";
 import { getDayStats } from "@/lib/course-stats";
 import { useI18n } from "@/lib/i18n";
-import { usePlanProgress } from "@/lib/plan-progress";
 import { planDayFor } from "@/lib/schedule";
 import CourseDay from "./CourseDay";
 import CourseOverview from "./CourseOverview";
 import CourseTabs from "./CourseTabs";
 
-/** The 85-video Rust course, studied in the Rust slots of plan week 1. */
+/** The 85-video Rust course, studied in the Rust slots of plan days 1–7. */
 export default function RustCourse() {
   const progress = useCourseProgress();
-  const { startDate } = usePlanProgress();
+  const startDate = START_DATE;
   const today = useToday();
   const { lang } = useI18n();
   const [pickedDay, setPickedDay] = useState<number | null>(null);

@@ -22,11 +22,11 @@ const en = {
     thisWeek: "This week",
     autosave: "Saved automatically",
     day: (n: number) => `Day ${n}`,
-    week: (n: number) => `Week ${n}`,
+    week: (n: number) => (n === 0 ? "Kickoff" : `Week ${n}`),
     phase: (n: number, title: string) => `Phase ${n}: ${title}`,
   },
   footer: {
-    startDate: "Start date (Day 1)",
+    schedule: (first: string, last: string) => `Day 1: ${first} · Day 100: ${last}`,
     export: "Export",
     import: "Import",
     reset: "Reset",
@@ -56,7 +56,7 @@ const en = {
     tip: "Tick “Mark done” after each time slot. Never break the chain two days in a row.",
   },
   day: {
-    header: (day: number, total: number, week: number) => `Day ${day}/${total} · Week ${week}`,
+    header: (day: number, total: number, week: string) => `Day ${day}/${total} · ${week}`,
     complete: (hours: string) => `Day complete: ${hours}`,
     studied: (done: string, planned: string) => `Studied ${done} / ${planned}`,
     navLabel: "Change day",
@@ -72,7 +72,7 @@ const en = {
   },
   roadmap: {
     title: "100-day roadmap",
-    lead: "4 phases, 15 weeks. Click a day to open its detailed schedule.",
+    lead: (weeks: number) => `4 phases, ${weeks} weeks (Monday to Sunday). Click a day to open its detailed schedule.`,
     phaseDays: (n: number, first: number, last: number) => `Phase ${n} · Days ${first}–${last}`,
     fullDays: (done: number, total: number) => `${done}/${total} full days`,
   },
@@ -144,11 +144,11 @@ const vi: Messages = {
     thisWeek: "Tuần này",
     autosave: "Tự động lưu",
     day: (n) => `Ngày ${n}`,
-    week: (n) => `Tuần ${n}`,
+    week: (n) => (n === 0 ? "Khởi động" : `Tuần ${n}`),
     phase: (n, title) => `Giai đoạn ${n}: ${title}`,
   },
   footer: {
-    startDate: "Ngày bắt đầu (Ngày 1)",
+    schedule: (first, last) => `Ngày 1: ${first} · Ngày 100: ${last}`,
     export: "Export",
     import: "Import",
     reset: "Reset",
@@ -178,7 +178,7 @@ const vi: Messages = {
     tip: "Tick “Xong slot” sau mỗi khung giờ. Đừng để đứt chuỗi 2 ngày liên tiếp.",
   },
   day: {
-    header: (day, total, week) => `Ngày ${day}/${total} · Tuần ${week}`,
+    header: (day, total, week) => `Ngày ${day}/${total} · ${week}`,
     complete: (hours) => `Hoàn thành ngày: ${hours}`,
     studied: (done, planned) => `Đã học ${done} / ${planned}`,
     navLabel: "Chuyển ngày",
@@ -194,7 +194,7 @@ const vi: Messages = {
   },
   roadmap: {
     title: "Lộ trình 100 ngày",
-    lead: "4 giai đoạn, 15 tuần. Bấm vào một ngày để mở lịch chi tiết của ngày đó.",
+    lead: (weeks) => `4 giai đoạn, ${weeks} tuần (Thứ Hai đến Chủ nhật). Bấm vào một ngày để mở lịch chi tiết của ngày đó.`,
     phaseDays: (n, first, last) => `Giai đoạn ${n} · Ngày ${first}–${last}`,
     fullDays: (done, total) => `${done}/${total} ngày trọn vẹn`,
   },

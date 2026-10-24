@@ -20,7 +20,6 @@ export type Slot = {
   end: string;
   track: TrackId;
   minutes: number;
-  label?: string;
 };
 
 export type Focus = { title: Text; tasks: Text[]; links?: Link[] };
@@ -30,10 +29,15 @@ export type Week = {
   focus: Partial<Record<TrackId, Focus>>;
 };
 
-export type Phase = { id: number; title: string; firstDay: number; lastDay: number; goal: Text };
+/** Phases span whole plan weeks, so they always break between Sunday and Monday. */
+export type Phase = { id: number; title: string; firstWeek: number; lastWeek: number; goal: Text };
 
 export const TOTAL_DAYS = 100;
-export const DEFAULT_START_DATE = "2026-10-26";
+/**
+ * Day 1 is Sunday 25/10/2026, so day 100 is Monday 01/02/2027. The kickoff day, the phase
+ * boundaries and the Rust course split are calibrated for this start, so it is fixed.
+ */
+export const START_DATE = "2026-10-25";
 
 export const TRACKS: Track[] = [
   {
@@ -99,15 +103,15 @@ export const PHASES: Phase[] = [
   {
     id: 1,
     title: "Learn Rust",
-    firstDay: 1,
-    lastDay: 21,
+    firstWeek: 0,
+    lastWeek: 3,
     goal: bi("85 videos, 100% Rustlings, 1 Rust CLI repo", "Xong 85 video, 100% Rustlings, 1 repo Rust CLI"),
   },
   {
     id: 2,
     title: "Rust for Solana",
-    firstDay: 22,
-    lastDay: 49,
+    firstWeek: 4,
+    lastWeek: 7,
     goal: bi(
       "Project 1: escrow/marketplace program on devnet with tests and a TS client",
       "Project 1: program escrow/marketplace trên devnet, có test và client TS",
@@ -116,20 +120,20 @@ export const PHASES: Phase[] = [
   {
     id: 3,
     title: "Rust for core chain (Layer 2)",
-    firstDay: 50,
-    lastDay: 84,
+    firstWeek: 8,
+    lastWeek: 12,
     goal: bi("Project 2: a mini-chain + mini rollup in Rust", "Project 2: mini-chain + mini rollup bằng Rust"),
   },
   {
     id: 4,
     title: "Interview & job",
-    firstDay: 85,
-    lastDay: 100,
+    firstWeek: 13,
+    lastWeek: 15,
     goal: bi("≥ 10 mock interviews, final CV and portfolio", "≥ 10 mock interview, CV và portfolio bản cuối"),
   },
 ];
 
-// Mon–Fri 4:00–8:00; Sat and Sun 4:00–8:00, 9:00–12:00, 13:00–16:00.
+// Mon–Fri 4:00–8:00; Sat and Sun 4:00–8:00, 9:00–12:00, 13:00–16:00 (40h per week).
 export const SLOTS: { weekday: Slot[]; saturday: Slot[]; sunday: Slot[] } = {
   weekday: [
     { id: "rust", start: "04:00", end: "06:30", track: "rust", minutes: 150 },
@@ -137,14 +141,14 @@ export const SLOTS: { weekday: Slot[]; saturday: Slot[]; sunday: Slot[] } = {
     { id: "english", start: "07:15", end: "08:00", track: "english", minutes: 45 },
   ],
   saturday: [
-    { id: "rust", start: "04:00", end: "08:00", track: "rust", minutes: 240, label: "Rust project" },
+    { id: "rust", start: "04:00", end: "08:00", track: "rust", minutes: 240 },
     { id: "solidity", start: "09:00", end: "12:00", track: "solidity", minutes: 180 },
     { id: "upwork", start: "13:00", end: "16:00", track: "upwork", minutes: 180 },
   ],
   sunday: [
-    { id: "rust", start: "04:00", end: "08:00", track: "rust", minutes: 240, label: "Rust project" },
+    { id: "rust", start: "04:00", end: "08:00", track: "rust", minutes: 240 },
     { id: "interview", start: "09:00", end: "12:00", track: "interview", minutes: 180 },
-    { id: "english", start: "13:00", end: "15:00", track: "english", minutes: 120, label: "Mock interview" },
+    { id: "english", start: "13:00", end: "15:00", track: "english", minutes: 120 },
     { id: "review", start: "15:00", end: "16:00", track: "review", minutes: 60 },
   ],
 };
@@ -198,15 +202,84 @@ const proposals = (extra: Text[] = []): Focus => ({
 
 export const WEEKS: Week[] = [
   {
+    // Days before the first Monday: a kickoff. With the default Sunday start it is day 1 only.
+    week: 0,
+    focus: {
+      rust: {
+        title: bi("Kickoff: set up + Rust course day 1", "Khởi động: cài đặt + Khoá Rust ngày 1"),
+        tasks: [
+          bi("Follow Rust course day 1 on the course page", "Học Khoá Rust ngày 1 trên trang khoá học"),
+          bi("Set up your editor: VS Code + rust-analyzer", "Cài editor: VS Code + rust-analyzer"),
+          bi("Create a GitHub repo for your 100-day code and notes", "Tạo repo GitHub cho code và ghi chú 100 ngày"),
+        ],
+        links: [L.rustCourse, L.rustBook],
+      },
+      solidity: {
+        title: bi("Kickoff: Solidity setup", "Khởi động: chuẩn bị Solidity"),
+        tasks: [
+          bi("Install Foundry (foundryup)", "Cài Foundry (foundryup)"),
+          bi("Skim the Solidity docs and note what you've forgotten", "Lướt Solidity docs, ghi lại phần đã quên"),
+        ],
+        links: [L.foundry, L.solidityDocs],
+      },
+      english: {
+        title: bi("Baseline recording", "Ghi âm xuất phát điểm"),
+        tasks: [
+          bi(
+            "Record a 2-minute “Tell me about yourself” as you are today",
+            "Ghi âm 2 phút “Tell me about yourself” với trình độ hiện tại",
+          ),
+          bi("Write down the words and phrases you got stuck on", "Ghi lại các từ và cụm từ bị vấp"),
+          bi("Keep this recording to compare on day 100", "Giữ bản ghi này để so sánh vào Ngày 100"),
+        ],
+      },
+      interview: {
+        title: bi("Job research & baseline", "Tìm hiểu job & đánh giá xuất phát điểm"),
+        tasks: [
+          bi(
+            "Read 10 Rust / blockchain job posts and list the skills they ask for",
+            "Đọc 10 tin tuyển dụng Rust / blockchain, liệt kê kỹ năng họ yêu cầu",
+          ),
+          bi("Rate yourself 1–5 on each skill", "Tự chấm 1–5 cho từng kỹ năng"),
+          bi("Pick 3 target roles or companies", "Chọn 3 vị trí hoặc công ty mục tiêu"),
+        ],
+        links: [L.interviewHandbook],
+      },
+      upwork: {
+        title: bi("Kickoff: Upwork audit", "Khởi động: rà soát Upwork"),
+        tasks: [
+          bi("Review your current Upwork profile and CV", "Xem lại profile Upwork và CV hiện tại"),
+          bi("Save 5 job posts you would like to win", "Lưu 5 job bạn muốn giành được"),
+        ],
+        links: [L.upwork],
+      },
+      review: {
+        title: bi("Plan the 100 days", "Lên kế hoạch 100 ngày"),
+        tasks: [
+          bi("Read the roadmap and the goal of each phase", "Đọc lộ trình và mục tiêu từng giai đoạn"),
+          bi(
+            "Set a 3:45 AM alarm and block the study slots in your calendar",
+            "Đặt báo thức 3:45 sáng và chặn các khung giờ học trên lịch",
+          ),
+          bi("Commit to one rule: never miss two days in a row", "Cam kết một quy tắc: không bỏ 2 ngày liên tiếp"),
+        ],
+      },
+    },
+  },
+  {
     week: 1,
     focus: {
       rust: {
         title: bi("Rust for beginners course (85 videos)", "Khoá Rust for beginners (85 video)"),
         tasks: [
-          bi("Study one course day per day (Rust course page)", "Mỗi ngày học đúng 1 ngày của khoá (trang Khoá Rust)"),
+          bi("Follow the Rust course day by day (Rust course page)", "Học theo Khoá Rust từng ngày (trang Khoá Rust)"),
           bi("Watch all 85 videos", "Xem hết 85 video"),
           bi("Do the Rustlings exercises for each day's topics", "Làm Rustlings theo chủ đề từng ngày"),
           bi("Get the Grep project running", "Project Grep chạy được"),
+          bi(
+            "Sunday: catch up on anything left and write a 1-page course summary",
+            "Chủ nhật: học bù phần còn thiếu và viết tóm tắt khoá học 1 trang",
+          ),
         ],
         links: [L.rustCourse, L.rustlings],
       },
@@ -848,11 +921,13 @@ export const WEEKS: Week[] = [
   },
 ];
 
+/** Sunday 15:00–16:00 of every week after the kickoff. */
 export const REVIEW_FOCUS: Focus = {
   title: bi("Weekly review", "Review tuần"),
   tasks: [
     bi("Compare total hours with the plan", "So tổng giờ học với kế hoạch"),
     bi("Carry unfinished work to next week", "Dời việc chưa xong sang tuần sau"),
     bi("Write down 3 things you learned this week", "Ghi 3 điều học được trong tuần"),
+    bi("Pick next week's top 3 priorities", "Chọn 3 ưu tiên cho tuần sau"),
   ],
 };

@@ -23,7 +23,7 @@ function parseCourseProgress(value: unknown): CourseProgress {
 }
 
 export const courseStore = createLocalStore<CourseProgress>(
-  "plan01:rust-course:v1",
+  "plan01:rust-course:v2",
   { watched: {}, tasks: {}, notes: {}, rate: 1 },
   parseCourseProgress,
 );
