@@ -42,14 +42,14 @@ export default function CourseOverview({ stats, startDate, todayPlanDay }: Props
   return (
     <header className="hero">
       <div className="hero-intro">
-        <p className="eyebrow">{t.course.eyebrow}</p>
+        <p className="eyebrow">{t.course.eyebrow(course.days.length)}</p>
         <h1>
           {t.course.titlePrefix}{" "}
           <a href={course.playlist} target="_blank" rel="noreferrer">
             {course.title}
           </a>
         </h1>
-        <p className="lead">{t.course.lead(videoCount, course.channel)}</p>
+        <p className="lead">{t.course.lead(videoCount, course.channel, course.days.length)}</p>
       </div>
 
       <div className="card progress-card">

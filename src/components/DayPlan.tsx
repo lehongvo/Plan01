@@ -31,7 +31,7 @@ function CourseSlotInfo({ day, progress }: { day: number; progress: CourseProgre
   return (
     <div className="course-link">
       <div>
-        <p className="now-label">{t.day.courseDay(courseDay.day)}</p>
+        <p className="now-label">{t.day.courseDay(courseDay.day, course.days.length)}</p>
         <p className="now-title">{tr(courseDay.title)}</p>
         <p className="count">
           {t.day.courseCounts(
@@ -50,6 +50,8 @@ function CourseSlotInfo({ day, progress }: { day: number; progress: CourseProgre
 type SlotCardProps = {
   day: number;
   slot: Slot;
+  /** An earlier slot of the same track that day (weekend Rust 16:00); it carries the checklist. */
+  firstOfTrack: Slot | null;
   progress: PlanProgress;
   courseProgress: CourseProgress;
   isNow: boolean;
@@ -57,7 +59,7 @@ type SlotCardProps = {
   locked: boolean;
 };
 
-function SlotCard({ day, slot, progress, courseProgress, isNow, locked }: SlotCardProps) {
+function SlotCard({ day, slot, firstOfTrack, progress, courseProgress, isNow, locked }: SlotCardProps) {
   const { lang, t, tr } = useI18n();
   const [expanded, setExpanded] = useState(false);
   const week = weekOf(day, START_DATE);
@@ -99,7 +101,9 @@ function SlotCard({ day, slot, progress, courseProgress, isNow, locked }: SlotCa
         </button>
       </div>
       {focus && <h3 className="slot-title">{tr(focus.title)}</h3>}
-      {showBody && (
+      {firstOfTrack ? (
+        <p className="weekly-hint">{t.day.continues(firstOfTrack.start)}</p>
+      ) : showBody && (
         <>
           {slot.track === "rust" && day <= course.days.length && (
             <CourseSlotInfo day={day} progress={courseProgress} />
@@ -113,7 +117,7 @@ function SlotCard({ day, slot, progress, courseProgress, isNow, locked }: SlotCa
           {focus?.links && <LinkList links={focus.links} />}
         </>
       )}
-      {done && focus && (
+      {done && focus && !firstOfTrack && (
         <button type="button" className="slot-more" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
           {expanded ? t.day.hideTasks : t.day.showTasks(tasksDone, focus.tasks.length)}
         </button>
@@ -144,6 +148,8 @@ export default function DayPlan({ day, variant = "page" }: DayPlanProps) {
   const slots = slotsFor(day, START_DATE);
   const minutes = dayMinutes(day, progress);
   const notesId = `plan-day-${day}-notes`;
+  const earlierOfTrack = (slot: Slot) =>
+    slots.find((s) => s.track === slot.track && toMinutes(s.start) < toMinutes(slot.start)) ?? null;
 
   // Which slot is running now, or comes next, while viewing today.
   let nowSlot: Slot | undefined;
@@ -233,6 +239,7 @@ export default function DayPlan({ day, variant = "page" }: DayPlanProps) {
             key={slot.id}
             day={day}
             slot={slot}
+            firstOfTrack={earlierOfTrack(slot)}
             progress={progress}
             courseProgress={courseProgress}
             isNow={slot.id === nowSlot?.id && !progress.slots[slotKey(day, slot.id)]}

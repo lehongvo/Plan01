@@ -15,7 +15,7 @@ export const PHASE_QUOTES: Record<number, PhaseQuotes> = {
   1: {
     lines: [
       bi("Day one is the hardest. You already showed up.", "Ngày đầu tiên là khó nhất. Và bạn đã có mặt."),
-      bi("4 AM is quiet. That quiet is your advantage.", "4 giờ sáng rất yên tĩnh. Sự yên tĩnh đó là lợi thế của bạn."),
+      bi("5 AM is quiet. That quiet is your advantage.", "5 giờ sáng rất yên tĩnh. Sự yên tĩnh đó là lợi thế của bạn."),
       bi(
         "The compiler is strict so your code can be trusted. Let it teach you.",
         "Compiler khắt khe để code của bạn đáng tin. Hãy để nó dạy bạn.",
@@ -29,8 +29,8 @@ export const PHASE_QUOTES: Record<number, PhaseQuotes> = {
       bi("One week done. Keep the chain alive.", "Xong một tuần. Giữ chuỗi tiếp tục nhé."),
       bi("Every error message is a free lesson.", "Mỗi thông báo lỗi là một bài học miễn phí."),
       bi(
-        "Nobody sees your 4 AM work. Your future job will.",
-        "Không ai thấy bạn học lúc 4 giờ sáng. Công việc tương lai của bạn sẽ thấy.",
+        "Nobody sees your 5 AM work. Your future job will.",
+        "Không ai thấy bạn học lúc 5 giờ sáng. Công việc tương lai của bạn sẽ thấy.",
       ),
       bi("Write the code, break it, fix it. That's how it sticks.", "Viết code, làm nó lỗi, rồi sửa. Đó là cách để nhớ lâu."),
       bi(
@@ -131,7 +131,7 @@ export const PHASE_QUOTES: Record<number, PhaseQuotes> = {
       bi("Every proof starts with a question. Keep asking.", "Mọi bằng chứng đều bắt đầu từ một câu hỏi. Cứ tiếp tục hỏi."),
       bi("Discipline has become who you are. Keep it.", "Kỷ luật đã trở thành con người bạn. Hãy giữ lấy."),
       bi("Sleep is a feature, not a bug. Protect it tonight.", "Ngủ đủ là tính năng, không phải bug. Tối nay hãy giữ nó."),
-      bi("Ten weeks of 4 AM. That's who you are now.", "Mười tuần dậy lúc 4 giờ. Đó là con người bạn bây giờ."),
+      bi("Ten weeks of 5 AM. That's who you are now.", "Mười tuần dậy lúc 5 giờ. Đó là con người bạn bây giờ."),
       bi("Layer 2 is where scaling happens. So is your career.", "Layer 2 là nơi mở rộng quy mô. Sự nghiệp của bạn cũng vậy."),
       bi(
         "Reading Reth's code is hard. That's why few can. Be one of them.",
@@ -175,7 +175,8 @@ export const PHASE_QUOTES: Record<number, PhaseQuotes> = {
       bi("Negotiate calmly. You know your value now.", "Đàm phán thật bình tĩnh. Giờ bạn biết giá trị của mình."),
       bi("Polish, don't rebuild. You're almost there.", "Trau chuốt, đừng làm lại. Sắp tới đích rồi."),
       bi("One more push. Momentum is on your side.", "Thêm một cú hích nữa. Đà đang đứng về phía bạn."),
-      bi("Fourteen weeks. Thank the person who woke up at 4 AM.", "Mười bốn tuần. Hãy cảm ơn người đã dậy lúc 4 giờ sáng."),
+      bi("Fourteen weeks. Thank the person who woke up at 5 AM.", "Mười bốn tuần. Hãy cảm ơn người đã dậy lúc 5 giờ sáng."),
+      bi("Wrap-up days: tie off every loose end.", "Những ngày tổng kết: buộc lại mọi đầu mối còn dở."),
     ],
     almost: bi("Tomorrow is day 100. Finish like you started: on time.", "Mai là Ngày 100. Về đích như cách bạn bắt đầu: đúng giờ."),
     done: bi(

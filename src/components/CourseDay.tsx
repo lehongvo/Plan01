@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { StudyDay, Video } from "@/data/course";
+import { course, type StudyDay, type Video } from "@/data/course";
 import { PLAYBACK_RATES, courseActions, courseTaskKey, type CourseProgress } from "@/lib/course-progress";
 import { getDayStats, nextUnwatched } from "@/lib/course-stats";
 import { formatClock, formatMinutes } from "@/lib/dates";
@@ -57,7 +57,7 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
     <section className="day" aria-labelledby={titleId}>
       <header>
         <p className="eyebrow">
-          {t.course.dayOf(day.day)} · {dateLabel}
+          {t.course.dayOf(day.day, course.days.length)} · {dateLabel}
           {isToday && <span className="badge">{t.common.today}</span>}
         </p>
         <h2 id={titleId}>{tr(day.title)}</h2>
