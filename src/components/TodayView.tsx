@@ -1,12 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { PHASES, START_DATE, TOTAL_DAYS } from "@/data/plan";
-import { formatHours, formatStudyDate, useToday } from "@/lib/dates";
+import { START_DATE, TOTAL_DAYS } from "@/data/plan";
+import { useCourseProgress } from "@/lib/course-progress";
+import { formatHours, formatStudyDate, toMinutes, useNowMinutes, useToday } from "@/lib/dates";
 import { useI18n, type Messages } from "@/lib/i18n";
-import { usePlanProgress } from "@/lib/plan-progress";
-import { clampDay, currentStreak, phaseDays, phaseOf, planDayFor, planTotals, weekOf } from "@/lib/schedule";
+import { slotKey, usePlanProgress } from "@/lib/plan-progress";
+import {
+  clampDay,
+  currentStreak,
+  dayMinutes,
+  phaseOf,
+  planDayFor,
+  planTotals,
+  quoteFor,
+  slotsFor,
+  weekOf,
+} from "@/lib/schedule";
+import { stagger } from "@/lib/style";
+import { totalXp } from "@/lib/xp";
 import DayPlan from "./DayPlan";
+import type { FerrisMood } from "./Ferris";
+import FerrisQuote from "./FerrisQuote";
+import JourneyTrail from "./JourneyTrail";
+import LevelCard from "./LevelCard";
+import ProgressRing from "./ProgressRing";
+import StreakCard from "./StreakCard";
+import { GearField } from "./TrackIcon";
 
 function headline(t: Messages, todayDay: number) {
   if (todayDay < 1) return t.today.beforeStart(1 - todayDay);
@@ -18,10 +38,9 @@ function headline(t: Messages, todayDay: number) {
 function TodaySkeleton() {
   return (
     <div className="skeleton" aria-busy="true">
-      <div style={{ height: 18, width: "45%" }} />
-      <div style={{ height: 36, width: "70%" }} />
-      <div style={{ height: 64 }} />
-      <div style={{ height: 72 }} />
+      <div style={{ height: 210 }} />
+      <div style={{ height: 120 }} />
+      <div style={{ height: 90 }} />
       <div style={{ height: 220 }} />
     </div>
   );
@@ -30,7 +49,9 @@ function TodaySkeleton() {
 export default function TodayView() {
   const { lang, t } = useI18n();
   const progress = usePlanProgress();
+  const course = useCourseProgress();
   const today = useToday();
+  const nowMinutes = useNowMinutes();
 
   if (today === null) {
     return (
@@ -42,14 +63,27 @@ export default function TodayView() {
 
   const todayDay = planDayFor(START_DATE, today);
   const day = clampDay(todayDay);
+  const isPlanDay = todayDay >= 1 && todayDay <= TOTAL_DAYS;
   const phase = phaseOf(day, START_DATE);
+  const minutes = dayMinutes(day, progress);
   const totals = planTotals(progress);
-  const streak = currentStreak(progress, todayDay);
+
+  // Ferris celebrates a finished day, works during an open slot and sleeps at night.
+  const working =
+    isPlanDay &&
+    nowMinutes !== null &&
+    slotsFor(day, START_DATE).some(
+      (s) =>
+        !progress.slots[slotKey(day, s.id)] && nowMinutes >= toMinutes(s.start) && nowMinutes < toMinutes(s.end),
+    );
+  const night = nowMinutes !== null && (nowMinutes < 4 * 60 + 30 || nowMinutes >= 21 * 60);
+  const mood: FerrisMood = isPlanDay && minutes.complete ? "party" : working ? "work" : night ? "sleep" : "wave";
 
   return (
     <div className="page">
-      <header className="today-hero">
-        <div className="today-intro">
+      <section className="forge rise">
+        <GearField />
+        <div className="forge-head">
           <Link href="/roadmap" className="eyebrow phase-link">
             {t.common.phase(phase.id, phase.title)} →
           </Link>
@@ -57,46 +91,34 @@ export default function TodayView() {
           <p className="today-date">
             {formatStudyDate(START_DATE, day - 1, lang)} · {t.common.week(weekOf(day, START_DATE))}
           </p>
-          <ol className="phase-bar" aria-label={t.today.phases}>
-            {PHASES.map((p) => {
-              const span = phaseDays(p.id, START_DATE);
-              return (
-                <li
-                  key={p.id}
-                  style={{ flexGrow: span.length }}
-                  className={p.id === phase.id ? "is-active" : span.last < day ? "is-past" : undefined}
-                >
-                  <span>{p.title}</span>
-                </li>
-              );
-            })}
-          </ol>
         </div>
+        <FerrisQuote quote={quoteFor(day, START_DATE)} mood={mood} />
+      </section>
 
-        <div className="card today-stats">
-          <dl>
-            <div>
-              <dt>{t.today.streak}</dt>
-              <dd>{t.today.streakDays(streak)}</dd>
-            </div>
-            <div>
-              <dt>{t.today.hours}</dt>
-              <dd>
-                {formatHours(totals.done, lang)}
-                <small> / {formatHours(totals.planned, lang)}</small>
-              </dd>
-            </div>
-            <div>
-              <dt>{t.today.fullDays}</dt>
-              <dd>
-                {totals.completeDays}
-                <small> / {TOTAL_DAYS}</small>
-              </dd>
-            </div>
-          </dl>
-          {totals.done === 0 && <p className="today-tip">{t.today.tip}</p>}
+      <section className="stat-grid rise" style={stagger(1)}>
+        <div className="card ring-card">
+          <ProgressRing
+            value={minutes.done / minutes.planned}
+            label={`${t.today.todayRing}: ${formatHours(minutes.done, lang)} / ${formatHours(minutes.planned, lang)}`}
+          >
+            <strong>{formatHours(minutes.done, lang)}</strong>
+            <small>/ {formatHours(minutes.planned, lang)}</small>
+          </ProgressRing>
+          <p className="count">{t.today.todayRing}</p>
         </div>
-      </header>
+        <LevelCard xp={totalXp(progress, course)} />
+        <StreakCard progress={progress} todayDay={todayDay} streak={currentStreak(progress, todayDay)} />
+      </section>
+
+      {totals.done === 0 && (
+        <p className="today-tip rise" style={stagger(2)}>
+          {t.today.tip}
+        </p>
+      )}
+
+      <div className="rise" style={stagger(2)}>
+        <JourneyTrail progress={progress} todayDay={todayDay} />
+      </div>
 
       <DayPlan key={day} day={day} variant="today" />
     </div>

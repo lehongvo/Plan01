@@ -5,6 +5,7 @@ import { course } from "@/data/course";
 import type { DayStats } from "@/lib/course-stats";
 import { formatMinutes, formatStudyDate } from "@/lib/dates";
 import { useI18n, type Messages } from "@/lib/i18n";
+import Ferris from "./Ferris";
 
 type Props = {
   stats: DayStats[];
@@ -42,6 +43,7 @@ export default function CourseOverview({ stats, startDate, todayPlanDay }: Props
   return (
     <header className="hero">
       <div className="hero-intro">
+        <Ferris mood="work" size={88} />
         <p className="eyebrow">{t.course.eyebrow(course.days.length)}</p>
         <h1>
           {t.course.titlePrefix}{" "}

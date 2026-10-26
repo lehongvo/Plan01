@@ -6,6 +6,9 @@ import { formatHours } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n";
 import { usePlanProgress } from "@/lib/plan-progress";
 import { focusTasksDone, trackMinutes, trackWeeks } from "@/lib/schedule";
+import { stagger } from "@/lib/style";
+import ProgressRing from "./ProgressRing";
+import TrackIcon from "./TrackIcon";
 
 export default function TrackList() {
   const { lang, t, tr } = useI18n();
@@ -20,7 +23,7 @@ export default function TrackList() {
       </header>
 
       <ul className="track-cards">
-        {TRACKS.map((track) => {
+        {TRACKS.map((track, index) => {
           const minutes = trackMinutes(track.id, progress);
           let done = 0;
           let total = 0;
@@ -31,14 +34,19 @@ export default function TrackList() {
           }
           const percent = minutes.planned ? Math.round((minutes.done / minutes.planned) * 100) : 0;
           return (
-            <li key={track.id} className={`track-${track.id}`}>
+            <li key={track.id} className={`track-${track.id} rise`} style={stagger(index)}>
               <Link href={`/tracks/${track.id}`} className="card track-card">
+                <div className="track-card-head">
+                  <span className="slot-icon">
+                    <TrackIcon track={track.id} />
+                  </span>
+                  <ProgressRing value={percent / 100} size={52} stroke={6} label={`${percent}%`}>
+                    <strong>{percent}%</strong>
+                  </ProgressRing>
+                </div>
                 <span className="track-badge">{tr(track.area)}</span>
                 <h3>{tr(track.name)}</h3>
                 <p className="day-topic">{tr(track.summary)}</p>
-                <div className="bar track-bar" aria-hidden="true">
-                  <span style={{ width: `${percent}%` }} />
-                </div>
                 <p className="count">
                   {t.tracks.summary(formatHours(minutes.done, lang), formatHours(minutes.planned, lang), done, total)}
                 </p>

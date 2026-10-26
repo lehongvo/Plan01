@@ -6,6 +6,8 @@ import { PLAYBACK_RATES, courseActions, courseTaskKey, type CourseProgress } fro
 import { getDayStats, nextUnwatched } from "@/lib/course-stats";
 import { formatClock, formatMinutes } from "@/lib/dates";
 import { useI18n, type Messages } from "@/lib/i18n";
+import { rewardAt } from "@/lib/rewards";
+import { XP, currentLevel } from "@/lib/xp";
 import { CheckIcon, ExternalIcon } from "./icons";
 import LinkList from "./LinkList";
 import YouTubePlayer, { type PlayRequest } from "./YouTubePlayer";
@@ -37,17 +39,23 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
     setPicked((prev) => ({ videoId, autoplay: true, nonce: (prev?.nonce ?? 0) + 1 }));
   }
 
-  function finish(videoId: string) {
+  /** Marks a video watched (rewarding it the first time) and moves on to the next one. */
+  function finish(videoId: string, origin: Element | null) {
+    const levelBefore = currentLevel().level;
+    const firstTime = !progress.watched[videoId];
     courseActions.setWatched(videoId, true);
+    if (firstTime && origin) rewardAt(origin, XP.video, levelBefore, t);
     const next = nextUnwatched(day, progress, videoId);
     if (next) play(next.id);
     else setPicked(request); // last one: keep it on screen instead of jumping back
   }
 
-  function toggleWatched(videoId: string, watched: boolean) {
+  function toggleWatched(videoId: string, watched: boolean, origin: Element) {
     // Pin the current video so ticking boxes never swaps what is playing.
     if (!picked) setPicked(request);
+    const levelBefore = currentLevel().level;
     courseActions.setWatched(videoId, watched);
+    if (watched) rewardAt(origin, XP.video, levelBefore, t);
   }
 
   const titleId = `course-day-${day.day}-title`;
@@ -73,7 +81,11 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
       <div className="day-grid">
         <div className="day-column">
           <div className="card player-card">
-            <YouTubePlayer request={request} rate={progress.rate} onEnded={finish} />
+            <YouTubePlayer
+              request={request}
+              rate={progress.rate}
+              onEnded={(videoId) => finish(videoId, document.querySelector(".player"))}
+            />
             <div className="now-playing">
               <div className="now-text">
                 <p className="now-label">
@@ -95,7 +107,7 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
                   ))}
                 </div>
                 <div className="player-buttons">
-                  <button type="button" className="button button-primary" onClick={() => finish(current.id)}>
+                  <button type="button" className="button button-primary" onClick={(event) => finish(current.id, event.currentTarget)}>
                     <CheckIcon />
                     {t.course.watchedNext}
                   </button>
@@ -133,7 +145,7 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
                         type="checkbox"
                         className="check"
                         checked={watched}
-                        onChange={(event) => toggleWatched(video.id, event.target.checked)}
+                        onChange={(event) => toggleWatched(video.id, event.target.checked, event.target)}
                         aria-label={t.course.markWatched(video.title)}
                       />
                     </label>
@@ -174,7 +186,12 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
                         type="checkbox"
                         className="check"
                         checked={Boolean(progress.tasks[key])}
-                        onChange={(event) => courseActions.setTaskDone(key, event.target.checked)}
+                        onChange={(event) => {
+                          const checked = event.target.checked;
+                          const levelBefore = currentLevel().level;
+                          courseActions.setTaskDone(key, checked);
+                          if (checked) rewardAt(event.target, XP.courseTask, levelBefore, t);
+                        }}
                       />
                       <span>{tr(task)}</span>
                     </label>

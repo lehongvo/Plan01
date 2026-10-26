@@ -5,6 +5,7 @@ import { PHASES, START_DATE, TOTAL_DAYS, type TrackId } from "@/data/plan";
 import { formatShortDate, formatStudyDate, useToday } from "@/lib/dates";
 import { useI18n } from "@/lib/i18n";
 import { usePlanProgress } from "@/lib/plan-progress";
+import JourneyTrail from "./JourneyTrail";
 import {
   dayMinutes,
   daysOfWeek,
@@ -44,6 +45,8 @@ export default function Roadmap() {
           </a>
         )}
       </header>
+
+      <JourneyTrail progress={progress} todayDay={todayDay} />
 
       <ol className="phase-cards">
         {PHASES.map((phase) => {
