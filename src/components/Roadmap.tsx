@@ -38,7 +38,7 @@ export default function Roadmap() {
           {formatStudyDate(startDate, 0, lang)} → {formatStudyDate(startDate, TOTAL_DAYS - 1, lang)}
         </p>
         <h1>{t.roadmap.title}</h1>
-        <p className="lead">{t.roadmap.lead(weeks.length)}</p>
+        <p className="lead">{t.roadmap.lead(weeks.filter((week) => daysOfWeek(week, startDate).length === 7).length)}</p>
         {currentWeek !== null && (
           <a className="button button-primary jump" href={`#week-${currentWeek}`}>
             {t.roadmap.jump} ↓

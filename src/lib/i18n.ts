@@ -22,7 +22,7 @@ const en = {
     thisWeek: "This week",
     autosave: "Saved automatically",
     day: (n: number) => `Day ${n}`,
-    week: (n: number) => (n === 0 ? "Kickoff week" : `Week ${n}`),
+    week: (n: number) => (n === 0 ? "Kickoff day" : n === 15 ? "Wrap-up day" : `Week ${n}`),
     phase: (n: number, title: string) => `Phase ${n}: ${title}`,
   },
   footer: {
@@ -176,7 +176,7 @@ const vi: Messages = {
     thisWeek: "Tuần này",
     autosave: "Tự động lưu",
     day: (n) => `Ngày ${n}`,
-    week: (n) => (n === 0 ? "Tuần khởi động" : `Tuần ${n}`),
+    week: (n) => (n === 0 ? "Ngày khởi động" : n === 15 ? "Ngày tổng kết" : `Tuần ${n}`),
     phase: (n, title) => `Giai đoạn ${n}: ${title}`,
   },
   footer: {

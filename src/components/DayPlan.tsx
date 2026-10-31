@@ -34,7 +34,7 @@ import { CheckIcon } from "./icons";
 import LinkList from "./LinkList";
 import TrackIcon from "./TrackIcon";
 
-/** Rust slots on plan days 1–6 follow the matching day of the Rust course. */
+/** Rust slots on plan days 1–7 follow the matching day of the Rust course. */
 function CourseSlotInfo({ day, progress }: { day: number; progress: CourseProgress }) {
   const { t, tr } = useI18n();
   const courseDay = course.days[day - 1];

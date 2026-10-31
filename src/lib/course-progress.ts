@@ -2,7 +2,7 @@ import { createLocalStore, isRecord, readFlags, readTexts, withFlag } from "./lo
 
 export const PLAYBACK_RATES = [1, 1.25, 1.5, 1.75, 2];
 
-/** Progress through the 85-video Rust course (week 1 of the plan). */
+/** Progress through the 85-video Rust course (plan days 1–7). */
 export type CourseProgress = {
   watched: Record<string, true>;
   /** Keys are `${courseDay}:${taskIndex}`. */
@@ -23,7 +23,7 @@ function parseCourseProgress(value: unknown): CourseProgress {
 }
 
 export const courseStore = createLocalStore<CourseProgress>(
-  "plan01:rust-course:v3",
+  "plan01:rust-course:v4",
   { watched: {}, tasks: {}, notes: {}, rate: 1 },
   parseCourseProgress,
 );
