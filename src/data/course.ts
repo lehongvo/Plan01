@@ -26,9 +26,8 @@ export type Course = {
   days: StudyDay[];
 };
 
-// Video ids, titles and durations come from the YouTube playlist metadata. The 7-day split
-// fits the plan's Rust slots for the Sunday 01/11 start: 4h on days 1 and 7 (Sun and Sat, 05:00–08:00
-// + 16:00–17:00) and 3h on days 2–6 (Mon–Fri).
+// Video ids, titles and durations come from the YouTube playlist metadata. Course day k runs on the
+// k-th plan day with a Rust slot (Sun 01/11 to Thu 12/11), so each course day fits one 3h slot.
 export const course: Course = {
   "title": "Rust for beginners (2025)",
   "channel": "Rustfully",
@@ -37,14 +36,14 @@ export const course: Course = {
     {
       "day": 1,
       "title": {
-        "en": "Setup, basics & control flow",
-        "vi": "Cài đặt, cơ bản & control flow"
+        "en": "Setup & basics",
+        "vi": "Cài đặt & cơ bản"
       },
       "topic": {
-        "en": "Install Rust and Cargo, variables, shadowing, data types, functions, statements vs expressions, if/else and loops.",
-        "vi": "Cài Rust và Cargo, biến, shadowing, kiểu dữ liệu, hàm, statement vs expression, if/else và vòng lặp."
+        "en": "Install Rust and Cargo, variables, shadowing, data types, functions, statements vs expressions and comments.",
+        "vi": "Cài Rust và Cargo, biến, shadowing, kiểu dữ liệu, hàm, statement vs expression và comment."
       },
-      "practice": 90,
+      "practice": 85,
       "videos": [
         {
           "id": "jpjo1HW5Fnk",
@@ -135,7 +134,47 @@ export const course: Course = {
           "lesson": 14,
           "title": "Adding comments in Rust",
           "seconds": 348
+        }
+      ],
+      "tasks": [
+        {
+          "en": "Install Rust (rustup) + VS Code with rust-analyzer",
+          "vi": "Cài Rust (rustup) + VS Code với rust-analyzer"
         },
+        {
+          "en": "Install Rustlings: cargo install rustlings, rustlings init",
+          "vi": "Cài Rustlings: cargo install rustlings, rustlings init"
+        },
+        "Rustlings: intro, variables, functions",
+        "Rustlings: primitive_types",
+        {
+          "en": "Mini: °C ↔ °F converter",
+          "vi": "Mini: đổi nhiệt độ °C ↔ °F"
+        }
+      ],
+      "links": [
+        {
+          "label": "Rust Book ch.3 — Common Concepts",
+          "url": "https://doc.rust-lang.org/book/ch03-00-common-programming-concepts.html"
+        },
+        {
+          "label": "Rustlings",
+          "url": "https://rustlings.rust-lang.org/"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": {
+        "en": "Control flow, ownership & structs",
+        "vi": "Control flow, ownership & structs"
+      },
+      "topic": {
+        "en": "if/else and loops, then the most important part of Rust: ownership, String vs &str, clone, references, slices and structs.",
+        "vi": "if/else và vòng lặp, rồi phần quan trọng nhất của Rust: ownership, String vs &str, clone, references, slices và structs."
+      },
+      "practice": 65,
+      "videos": [
         {
           "id": "o1CmBrNrjos",
           "lesson": 15,
@@ -183,44 +222,7 @@ export const course: Course = {
           "lesson": 22,
           "title": "Better loop control in Rust",
           "seconds": 259
-        }
-      ],
-      "tasks": [
-        {
-          "en": "Install Rust (rustup) + VS Code with rust-analyzer",
-          "vi": "Cài Rust (rustup) + VS Code với rust-analyzer"
         },
-        {
-          "en": "Install Rustlings: cargo install rustlings, rustlings init",
-          "vi": "Cài Rustlings: cargo install rustlings, rustlings init"
-        },
-        "Rustlings: intro, variables, functions",
-        "Rustlings: if, primitive_types",
-        {
-          "en": "Mini: °C ↔ °F converter + FizzBuzz",
-          "vi": "Mini: đổi nhiệt độ °C ↔ °F + FizzBuzz"
-        }
-      ],
-      "links": [
-        {
-          "label": "Rust Book ch.3 — Common Concepts",
-          "url": "https://doc.rust-lang.org/book/ch03-00-common-programming-concepts.html"
-        },
-        {
-          "label": "Rustlings",
-          "url": "https://rustlings.rust-lang.org/"
-        }
-      ]
-    },
-    {
-      "day": 2,
-      "title": "Ownership & structs",
-      "topic": {
-        "en": "The most important part of Rust: ownership, String vs &str, clone, references, slices, then structs.",
-        "vi": "Phần quan trọng nhất của Rust: ownership, String vs &str, clone, references, slices, rồi đến structs."
-      },
-      "practice": 65,
-      "videos": [
         {
           "id": "TF-5LlagFkw",
           "lesson": 23,
@@ -307,6 +309,11 @@ export const course: Course = {
         }
       ],
       "tasks": [
+        "Rustlings: if",
+        {
+          "en": "Mini: FizzBuzz",
+          "vi": "Mini: FizzBuzz"
+        },
         "Rustlings: move_semantics",
         {
           "en": "Read Rust Book ch.4 — Ownership",
@@ -319,6 +326,10 @@ export const course: Course = {
         }
       ],
       "links": [
+        {
+          "label": "Rust Book ch.3 — Common Concepts",
+          "url": "https://doc.rust-lang.org/book/ch03-00-common-programming-concepts.html"
+        },
         {
           "label": "Rust Book ch.4 — Ownership",
           "url": "https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html"
@@ -754,7 +765,7 @@ export const course: Course = {
         "en": "Closures, iterators, Box and Rc, then catch up and review the whole course.",
         "vi": "Closures, iterators, Box và Rc, rồi học bù và ôn tập toàn khoá."
       },
-      "practice": 150,
+      "practice": 145,
       "videos": [
         {
           "id": "sjgkMn55Q2c",

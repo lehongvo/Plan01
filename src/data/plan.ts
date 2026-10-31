@@ -1,6 +1,6 @@
 import { bi, type Text } from "@/lib/text";
 
-export type TrackId = "rust" | "solidity" | "english" | "interview" | "upwork" | "review";
+export type TrackId = "evm" | "rust" | "security" | "english" | "interview" | "upwork" | "review";
 
 export type Link = { label: Text; url: string };
 
@@ -9,7 +9,7 @@ export type Track = {
   name: Text;
   /** Fits narrow labels such as the roadmap's week rows. */
   short: Text;
-  /** Where the track sits in the original goal list. */
+  /** The track's role in the strategy. */
   area: Text;
   summary: Text;
 };
@@ -41,60 +41,73 @@ export const START_DATE = "2026-11-01";
 
 export const TRACKS: Track[] = [
   {
+    id: "evm",
+    name: "Full-stack EVM",
+    short: "EVM",
+    area: bi("Sells now · 14h/week", "Bán được ngay · 14h/tuần"),
+    summary: bi(
+      "Solidity with Foundry, wagmi/viem, Node.js or Go backends, indexers, integrations, RPC and DevOps: what Upwork clients buy most.",
+      "Solidity với Foundry, wagmi/viem, backend Node.js hoặc Go, indexer, tích hợp, RPC và DevOps: thứ client Upwork mua nhiều nhất.",
+    ),
+  },
+  {
     id: "rust",
     name: "Rust",
     short: "Rust",
-    area: "I. NewJob",
-    summary: "Learn Rust → Rust for Solana → Rust for core chain (Layer 2).",
-  },
-  {
-    id: "solidity",
-    name: "Solidity",
-    short: "Solidity",
-    area: "II. Solidity",
+    area: bi("Long-term bet · 12h/week", "Cược dài hạn · 12h/tuần"),
     summary: bi(
-      "Refresh the overview, upgrade your knowledge (Foundry, security, DeFi), then practice interviews.",
-      "Ôn tổng quan, nâng cấp kiến thức (Foundry, bảo mật, DeFi) rồi luyện interview.",
+      "Learn Rust, ship one Solana program on mainnet, then read core chain code and open small PRs. Pays later, mostly outside Upwork.",
+      "Học Rust, ship một Solana program lên mainnet, rồi đọc code core chain và gửi PR nhỏ. Ra tiền chậm hơn, chủ yếu ngoài Upwork.",
     ),
   },
   {
     id: "english",
     name: "English",
     short: "English",
-    area: "III. English",
+    area: bi("Gate to every channel · 7h/week", "Cửa vào mọi kênh · 7h/tuần"),
     summary: bi(
-      "English for interviews: self-introduction, project stories, STAR, mock interviews.",
-      "Luyện tiếng Anh cho phỏng vấn: giới thiệu bản thân, kể dự án, STAR, mock interview.",
+      "Short spoken answers recorded in one take, requirement and rate talk, thinking aloud, and mock client calls.",
+      "Trả lời ngắn, ghi một lần không sửa, trao đổi yêu cầu và giá, nói thành lời khi suy nghĩ, gọi thử với client.",
     ),
   },
   {
-    id: "interview",
-    name: bi("Technical interview", "Interview kỹ thuật"),
-    short: "Interview",
-    area: "I.4 + II.3",
+    id: "security",
+    name: "Security review",
+    short: "Security",
+    area: bi("Premium skill · 4h/week", "Kỹ năng trả cao · 4h/tuần"),
     summary: bi(
-      "Rust, Solana, Solidity and system design questions plus a mock interview every Sunday.",
-      "Bộ câu hỏi Rust, Solana, Solidity, system design và mock interview mỗi Chủ nhật.",
+      "Invariant tests, fuzzing, PoCs, and running AI agents then proving which findings are real.",
+      "Invariant test, fuzzing, PoC, chạy AI agent rồi chứng minh finding nào là thật.",
     ),
   },
   {
     id: "upwork",
     name: "Upwork",
     short: "Upwork",
-    area: "Upwork",
+    area: bi("Paid work · 4h/week", "Việc có trả tiền · 4h/tuần"),
     summary: bi(
-      "Profile, finding jobs, sending proposals and client interviews.",
-      "Profile, tìm job, gửi proposal và phỏng vấn với client.",
+      "Profile, market log, client filters and proposals from week 3, then Arc.dev, direct applications and grants.",
+      "Profile, log thị trường, lọc client và proposal từ tuần 3, sau đó Arc.dev, nộp trực tiếp và grant.",
+    ),
+  },
+  {
+    id: "interview",
+    name: bi("Client interview", "Phỏng vấn client"),
+    short: "Interview",
+    area: bi("Wins the contract · 3h/week", "Chốt hợp đồng · 3h/tuần"),
+    summary: bi(
+      "Every Sunday: the questions clients really ask, code walkthroughs and mock calls.",
+      "Mỗi Chủ nhật: câu hỏi client hay hỏi, walkthrough code và gọi thử.",
     ),
   },
   {
     id: "review",
     name: bi("Weekly review", "Review tuần"),
     short: "Review",
-    area: bi("Discipline", "Kỷ luật"),
+    area: bi("Discipline · 1h/week", "Kỷ luật · 1h/tuần"),
     summary: bi(
-      "Compare planned and actual hours, carry over unfinished work, adjust next week.",
-      "So giờ kế hoạch với thực tế, dời việc chưa xong, chỉnh kế hoạch tuần sau.",
+      "Compare planned and actual hours, read your market numbers, and adjust next week.",
+      "So giờ kế hoạch với thực tế, đọc số liệu thị trường của bạn, chỉnh tuần sau.",
     ),
   },
 ];
@@ -102,59 +115,73 @@ export const TRACKS: Track[] = [
 export const PHASES: Phase[] = [
   {
     id: 1,
-    title: "Learn Rust",
+    title: "First bids",
     firstWeek: 0,
     lastWeek: 3,
-    goal: bi("85 videos, 100% Rustlings, 1 Rust CLI repo", "Xong 85 video, 100% Rustlings, 1 repo Rust CLI"),
+    goal: bi(
+      "Upwork profile live, dApp piece shipped, Rust basics done, first 10 proposals out",
+      "Profile Upwork hoàn chỉnh, xong dApp đầu tiên, nắm Rust cơ bản, gửi 10 proposal đầu",
+    ),
   },
   {
     id: 2,
-    title: "Rust for Solana",
+    title: "First contract",
     firstWeek: 4,
     lastWeek: 7,
     goal: bi(
-      "Project 1: escrow/marketplace program on devnet with tests and a TS client",
-      "Project 1: program escrow/marketplace trên devnet, có test và client TS",
+      "40 targeted proposals, integration and RPC pieces shipped, Solana basics done",
+      "40 proposal đúng mục tiêu, xong bộ tích hợp và RPC, nắm Solana cơ bản",
     ),
   },
   {
     id: 3,
-    title: "Rust for core chain (Layer 2)",
+    title: "Reviews & proof",
     firstWeek: 8,
     lastWeek: 12,
-    goal: bi("Project 2: a mini-chain + mini rollup in Rust", "Project 2: mini-chain + mini rollup bằng Rust"),
+    goal: bi(
+      "Reviews on Upwork, public security review, one Solana program on mainnet, one small core chain PR",
+      "Có review trên Upwork, bản security review công khai, một Solana program trên mainnet, một PR core chain nhỏ",
+    ),
   },
   {
     id: 4,
-    title: "Interview & job",
+    title: "Wider doors",
     firstWeek: 13,
     lastWeek: 15,
-    goal: bi("≥ 10 mock interviews, final CV and portfolio", "≥ 10 mock interview, CV và portfolio bản cuối"),
+    goal: bi(
+      "Rust crate published, rates raised, Arc.dev and direct applications running",
+      "Publish Rust crate, tăng giá, chạy song song Arc.dev và nộp trực tiếp",
+    ),
   },
 ];
 
 // Mon–Fri 05:00–08:00 and 09:00–11:00 (5h); Sat and Sun 05:00–08:00, 09:00–12:00, 13:00–17:00 (10h).
-// 45h per week. Weekends have a second, shorter Rust slot at the end of the day.
-export const SLOTS: { weekday: Slot[]; saturday: Slot[]; sunday: Slot[] } = {
-  weekday: [
-    { id: "rust", start: "05:00", end: "08:00", track: "rust", minutes: 180 },
-    { id: "english", start: "09:00", end: "10:00", track: "english", minutes: 60 },
-    { id: "solidity", start: "10:00", end: "11:00", track: "solidity", minutes: 60 },
-  ],
-  saturday: [
-    { id: "rust", start: "05:00", end: "08:00", track: "rust", minutes: 180 },
-    { id: "solidity", start: "09:00", end: "12:00", track: "solidity", minutes: 180 },
-    { id: "upwork", start: "13:00", end: "16:00", track: "upwork", minutes: 180 },
-    { id: "rust-pm", start: "16:00", end: "17:00", track: "rust", minutes: 60 },
-  ],
-  sunday: [
-    { id: "rust", start: "05:00", end: "08:00", track: "rust", minutes: 180 },
+// 45h per week: EVM 14, Rust 12, English 7, Security 4, Upwork 4, Client interview 3, Review 1.
+const morning = (track: TrackId): Slot => ({ id: track, start: "05:00", end: "08:00", track, minutes: 180 });
+const english: Slot = { id: "english", start: "09:00", end: "10:00", track: "english", minutes: 60 };
+const security: Slot = { id: "security", start: "10:00", end: "11:00", track: "security", minutes: 60 };
+
+/** Study slots by weekday, 0 = Sunday … 6 = Saturday. */
+export const SLOTS: Slot[][] = [
+  [
+    morning("rust"),
     { id: "interview", start: "09:00", end: "12:00", track: "interview", minutes: 180 },
     { id: "english", start: "13:00", end: "15:00", track: "english", minutes: 120 },
     { id: "review", start: "15:00", end: "16:00", track: "review", minutes: 60 },
-    { id: "rust-pm", start: "16:00", end: "17:00", track: "rust", minutes: 60 },
+    { id: "evm", start: "16:00", end: "17:00", track: "evm", minutes: 60 },
   ],
-};
+  [morning("evm"), english, security],
+  [morning("rust"), english, security],
+  [morning("evm"), english, security],
+  [morning("rust"), english, security],
+  [morning("evm"), english, { id: "upwork", start: "10:00", end: "11:00", track: "upwork", minutes: 60 }],
+  [
+    morning("evm"),
+    { id: "rust", start: "09:00", end: "12:00", track: "rust", minutes: 180 },
+    { id: "upwork", start: "13:00", end: "16:00", track: "upwork", minutes: 180 },
+    { id: "evm-pm", start: "16:00", end: "17:00", track: "evm", minutes: 60 },
+  ],
+];
 
 const L = {
   rustCourse: { label: bi("Rust course (85 videos)", "Khoá Rust 85 video"), url: "/rust" },
@@ -162,46 +189,65 @@ const L = {
   rustlings: { label: "Rustlings", url: "https://rustlings.rust-lang.org/" },
   exercism: { label: "Exercism Rust", url: "https://exercism.org/tracks/rust" },
   tokio: { label: "Tokio tutorial", url: "https://tokio.rs/tokio/tutorial" },
-  asyncBook: { label: "Async Rust book", url: "https://rust-lang.github.io/async-book/" },
+  clippy: { label: "Clippy", url: "https://doc.rust-lang.org/clippy/" },
   solanaDocs: { label: "Solana docs", url: "https://solana.com/docs" },
   programExamples: { label: "Solana program examples", url: "https://github.com/solana-foundation/program-examples" },
   anchor: { label: "Anchor docs", url: "https://www.anchor-lang.com/docs" },
-  libp2p: { label: "rust-libp2p", url: "https://github.com/libp2p/rust-libp2p" },
-  scaling: { label: "Ethereum scaling (rollups)", url: "https://ethereum.org/developers/docs/scaling/" },
-  reth: { label: "Reth", url: "https://reth.rs/" },
-  revm: { label: "revm", url: "https://github.com/bluealloy/revm" },
-  opDocs: { label: "OP Stack docs", url: "https://docs.optimism.io/" },
-  kona: { label: bi("Kona (OP Stack in Rust)", "Kona (OP Stack bằng Rust)"), url: "https://github.com/op-rs/kona" },
-  sp1: { label: "SP1 zkVM", url: "https://docs.succinct.xyz/" },
-  stylus: { label: "Arbitrum Stylus (Rust)", url: "https://docs.arbitrum.io/stylus/gentle-introduction" },
+  reth: { label: "Reth", url: "https://github.com/paradigmxyz/reth" },
+  lighthouse: { label: "Lighthouse", url: "https://github.com/sigp/lighthouse" },
   solidityDocs: { label: "Solidity docs", url: "https://docs.soliditylang.org/" },
   foundry: { label: "Foundry", url: "https://getfoundry.sh/" },
   openzeppelin: { label: "OpenZeppelin Contracts", url: "https://docs.openzeppelin.com/contracts" },
+  wagmi: { label: "wagmi", url: "https://wagmi.sh/" },
+  viem: { label: "viem", url: "https://viem.sh/" },
+  nextjs: { label: "Next.js docs", url: "https://nextjs.org/docs" },
+  ponder: { label: "Ponder (indexer)", url: "https://ponder.sh/" },
+  prometheus: { label: "Prometheus", url: "https://prometheus.io/docs/introduction/overview/" },
   ethernaut: { label: "Ethernaut", url: "https://ethernaut.openzeppelin.com/" },
   dvd: { label: "Damn Vulnerable DeFi", url: "https://www.damnvulnerabledefi.xyz/" },
-  uniswapBook: { label: "Uniswap V3 Development Book", url: "https://uniswapv3book.com/" },
+  solodit: { label: "Solodit audit findings", url: "https://solodit.cyfrin.io/" },
   erc4337: { label: "ERC-4337 docs", url: "https://docs.erc4337.io/" },
-  code4rena: { label: "Code4rena reports", url: "https://code4rena.com/reports" },
-  behavioral: {
-    label: "Behavioral interview (Tech Interview Handbook)",
-    url: "https://www.techinterviewhandbook.org/behavioral-interview/",
-  },
-  interviewHandbook: { label: "Tech Interview Handbook", url: "https://www.techinterviewhandbook.org/" },
-  leetcode: { label: "LeetCode", url: "https://leetcode.com/" },
   systemDesign: { label: "System Design Primer", url: "https://github.com/donnemartin/system-design-primer" },
-  upwork: { label: "Upwork", url: "https://www.upwork.com/" },
+  upwork: { label: "Upwork", url: "https://www.upwork.com/nx/find-work/" },
+  uma: {
+    label: bi("Upwork recorded video interview", "Video interview trên Upwork"),
+    url: "https://support.upwork.com/hc/en-us/articles/41104211856915-How-to-take-a-recorded-video-interview-on-Upwork",
+  },
+  arc: { label: "Arc.dev", url: "https://arc.dev/talent" },
+  toptal: { label: "Toptal", url: "https://www.toptal.com/top-3-percent" },
+  superteam: { label: "Superteam Earn", url: "https://superteam.fun/earn/" },
+  solanaGrants: { label: "Solana Foundation grants", url: "https://solana.org/grants-funding" },
+  matterLabs: { label: "Matter Labs careers", url: "https://jobs.ashbyhq.com/matter-labs" },
 } satisfies Record<string, Link>;
 
-const proposals = (extra: Text[] = []): Focus => ({
+const marketLog = bi(
+  "Market log, 30 minutes: job counts, then Connects, client spend, rate paid, proposals and video-interview requirement for the top filtered jobs",
+  "Log thị trường 30 phút: số job, rồi Connects, spend, rate đã trả, số proposal và yêu cầu video interview của các job đầu qua lọc",
+);
+
+// Proven-client jobs are too few to fill the weekly target on their own, so the filter widens on purpose.
+const proposals = (count: number, extra: Text[] = []): Focus => ({
   title: bi("Find jobs and send proposals", "Tìm job và gửi proposal"),
   tasks: [
-    bi("Check new jobs from your saved searches", "Lọc job mới từ các bộ tìm kiếm đã lưu"),
-    bi("Send ~5 proposals", "Gửi ~5 proposal"),
+    bi(
+      `Send ${count} tailored proposals: proven clients first`,
+      `Gửi ${count} proposal viết riêng: ưu tiên client đã chứng minh`,
+    ),
+    bi(
+      "When proven-client jobs run out, accept a new client only with verified payment, a clear spec and no tasks outside Upwork",
+      "Khi hết job của client đã chứng minh, chỉ nhận client mới nếu đã xác minh thanh toán, spec rõ và không yêu cầu làm gì ngoài Upwork",
+    ),
+    marketLog,
     ...extra,
-    bi("Log proposals, replies and interviews", "Ghi lại: số proposal, phản hồi, phỏng vấn"),
+    bi("Log every proposal: reply, interview, hire", "Ghi lại từng proposal: phản hồi, phỏng vấn, được thuê"),
   ],
   links: [L.upwork],
 });
+
+const clientWorkFirst = bi(
+  "Paid client work comes first and replaces this block; the items below are for weeks without a contract",
+  "Việc cho client luôn ưu tiên và thay cho khối này; các việc dưới đây dành cho tuần chưa có hợp đồng",
+);
 
 export const WEEKS: Week[] = [
   {
@@ -216,6 +262,21 @@ export const WEEKS: Week[] = [
         ],
         links: [L.rustCourse, L.rustBook],
       },
+      interview: {
+        title: bi("Upwork job research & baseline", "Tìm hiểu job Upwork & đánh giá xuất phát điểm"),
+        tasks: [
+          bi(
+            "Read 20 real blockchain jobs on Upwork and note what clients ask for",
+            "Đọc 20 job blockchain thật trên Upwork, ghi lại client đang cần gì",
+          ),
+          bi(
+            "Start a market log: search, job count, client spend, rate, proposals",
+            "Bắt đầu log thị trường: từ khoá, số job, spend của client, rate, số proposal",
+          ),
+          bi("Rate yourself 1–5 on each skill clients ask for", "Tự chấm 1–5 cho từng kỹ năng client yêu cầu"),
+        ],
+        links: [L.upwork],
+      },
       english: {
         title: bi("Baseline recording", "Ghi âm xuất phát điểm"),
         tasks: [
@@ -226,18 +287,6 @@ export const WEEKS: Week[] = [
           bi("Write down the words and phrases you got stuck on", "Ghi lại các từ và cụm từ bị vấp"),
           bi("Keep this recording to compare on day 100", "Giữ bản ghi này để so sánh vào Ngày 100"),
         ],
-      },
-      interview: {
-        title: bi("Job research & baseline", "Tìm hiểu job & đánh giá xuất phát điểm"),
-        tasks: [
-          bi(
-            "Read 10 Rust / blockchain job posts and list the skills they ask for",
-            "Đọc 10 tin tuyển dụng Rust / blockchain, liệt kê kỹ năng họ yêu cầu",
-          ),
-          bi("Rate yourself 1–5 on each skill", "Tự chấm 1–5 cho từng kỹ năng"),
-          bi("Pick 3 target roles or companies", "Chọn 3 vị trí hoặc công ty mục tiêu"),
-        ],
-        links: [L.interviewHandbook],
       },
       review: {
         title: bi("Plan the 100 days", "Lên kế hoạch 100 ngày"),
@@ -250,55 +299,74 @@ export const WEEKS: Week[] = [
           bi("Commit to one rule: never miss two days in a row", "Cam kết một quy tắc: không bỏ 2 ngày liên tiếp"),
         ],
       },
+      evm: {
+        title: bi("Kickoff: safe dev setup", "Khởi động: môi trường dev an toàn"),
+        tasks: [
+          bi("Install Foundry (foundryup), run forge init and forge test", "Cài Foundry (foundryup), chạy forge init và forge test"),
+          bi(
+            "Create a separate browser profile and a test wallet with no real funds",
+            "Tạo browser profile riêng và ví test không có tiền thật",
+          ),
+        ],
+        links: [L.foundry],
+      },
     },
   },
   {
     week: 1,
     focus: {
+      evm: {
+        title: bi("Piece A: RWA or stablecoin dApp, contracts", "Sản phẩm A: dApp RWA hoặc stablecoin, phần contract"),
+        tasks: [
+          bi(
+            "Pick a small RWA or stablecoin dApp and write a one-page spec",
+            "Chọn một dApp RWA hoặc stablecoin nhỏ, viết spec 1 trang",
+          ),
+          bi("Write the contracts with Foundry", "Viết contract bằng Foundry"),
+          bi("Unit tests for every main flow", "Unit test cho mọi luồng chính"),
+          bi("Deploy to a testnet", "Deploy lên testnet"),
+        ],
+        links: [L.foundry, L.openzeppelin, L.solidityDocs],
+      },
       rust: {
         title: bi("Rust for beginners course (85 videos)", "Khoá Rust for beginners (85 video)"),
         tasks: [
-          bi("Follow the Rust course day by day (Rust course page)", "Học theo Khoá Rust từng ngày (trang Khoá Rust)"),
-          bi("Watch all 85 videos", "Xem hết 85 video"),
-          bi("Do the Rustlings exercises for each day's topics", "Làm Rustlings theo chủ đề từng ngày"),
+          bi("Study one course day in each Rust slot (Rust course page)", "Mỗi slot Rust học một ngày của khoá (trang Khoá Rust)"),
+          bi("Do the Rustlings exercises for each topic", "Làm Rustlings theo từng chủ đề"),
           bi("Get the Grep project running", "Project Grep chạy được"),
-          bi(
-            "Sunday: catch up on anything left and write a 1-page course summary",
-            "Chủ nhật: học bù phần còn thiếu và viết tóm tắt khoá học 1 trang",
-          ),
         ],
         links: [L.rustCourse, L.rustlings],
       },
-      solidity: {
-        title: bi("Check overview: Solidity 0.8.x", "Check overview: Solidity 0.8.x"),
-        tasks: [
-          bi("Review types, storage / memory / calldata", "Ôn types, storage / memory / calldata"),
-          bi(
-            "Review custom errors, events, modifiers, receive / fallback",
-            "Ôn custom errors, events, modifiers, receive / fallback",
-          ),
-          bi("Install Foundry: forge init, forge test", "Cài Foundry: forge init, forge test"),
-          bi("Rewrite a basic ERC-20 with tests", "Viết lại ERC-20 cơ bản có test"),
-        ],
-        links: [L.solidityDocs, L.foundry],
-      },
       english: {
-        title: bi("2-minute self-introduction", "Giới thiệu bản thân 2 phút"),
+        title: bi("1-minute client introduction", "Giới thiệu với client trong 1 phút"),
         tasks: [
-          bi("Write your “Tell me about yourself” (~250 words)", "Viết bài “Tell me about yourself” (~250 từ)"),
-          bi("Record it, listen back, fix pronunciation", "Ghi âm, nghe lại, sửa phát âm"),
+          bi(
+            "Write it: who you are, what you ship, one proof",
+            "Viết ra: bạn là ai, bạn làm được gì, một bằng chứng",
+          ),
+          bi("Record it in one take, with no edits, every day", "Mỗi ngày ghi một lần, không sửa"),
           bi("Say it fluently without notes", "Nói trơn tru không cần nhìn"),
         ],
-        links: [L.behavioral],
+        links: [L.uma],
+      },
+      security: {
+        title: bi("EVM bugs that still pay", "Các lỗi EVM vẫn có giá trị"),
+        tasks: [
+          bi("Refresh Solidity 0.8.x: storage, custom errors, calldata", "Ôn Solidity 0.8.x: storage, custom error, calldata"),
+          bi("Reentrancy and access control: write a failing test for each", "Reentrancy và access control: viết test tái hiện mỗi lỗi"),
+        ],
+        links: [L.solidityDocs],
       },
       interview: {
-        title: bi("Rust basics questions", "Câu hỏi Rust cơ bản"),
+        title: bi("How clients screen you", "Client sàng lọc bạn thế nào"),
         tasks: [
-          bi("Ownership, borrowing, move vs copy", "Ownership, borrowing, move vs copy"),
-          bi("String vs &str, Vec, Option / Result", "String vs &str, Vec, Option / Result"),
-          bi("Answer 10 questions, flag the ones you're unsure of", "Tự trả lời 10 câu, đánh dấu câu chưa chắc"),
+          bi("Prepare answers: who you are, what you built, what you charge", "Chuẩn bị câu trả lời: bạn là ai, đã làm gì, giá bao nhiêu"),
+          bi("Walk through a reentrancy fix in Foundry, out loud", "Vừa nói vừa walkthrough cách sửa reentrancy trong Foundry"),
+          bi(
+            "Practise a polite refusal to run an unknown repo; offer screen-share in a VM or your public repo",
+            "Tập từ chối lịch sự khi bị yêu cầu chạy repo lạ; đề xuất screen-share trong VM hoặc dùng repo public của bạn",
+          ),
         ],
-        links: [L.rustBook],
       },
       upwork: {
         title: bi("Fix the CV + set up your profile", "Sửa CV + dựng profile"),
@@ -307,9 +375,21 @@ export const WEEKS: Week[] = [
             "Fix the CV from the review: contact info, timeline, typos",
             "Sửa CV theo bản review: thông tin liên hệ, mốc thời gian, lỗi chính tả",
           ),
-          bi("Write a Rust / Solidity focused title + overview", "Viết title + overview hướng Rust / Solidity"),
-          bi("Add 3 projects to the portfolio", "Thêm 3 dự án vào portfolio"),
-          bi("Pick an hourly rate", "Chọn hourly rate"),
+          bi(
+            "Headline as a promise: full-stack EVM and crypto integration, with node operations experience",
+            "Headline là một lời hứa: full-stack EVM và crypto integration, có kinh nghiệm vận hành node",
+          ),
+          bi("Add 3 projects as short client-facing case studies", "Thêm 3 dự án dạng case study ngắn cho client đọc"),
+          bi("Set your starting rate: $35–$45/hour", "Đặt giá khởi điểm: $35–$45/giờ"),
+          bi(
+            "Complete ID verification, which Rising Talent requires",
+            "Hoàn tất xác minh danh tính, điều kiện bắt buộc của Rising Talent",
+          ),
+          bi(
+            "Ask a tax professional about VAT and PIT on Upwork income, and the VAT ID banner",
+            "Hỏi chuyên gia thuế về VAT, PIT trên thu nhập Upwork và thông báo VAT ID",
+          ),
+          marketLog,
         ],
         links: [L.upwork],
       },
@@ -318,53 +398,70 @@ export const WEEKS: Week[] = [
   {
     week: 2,
     focus: {
-      rust: {
-        title: bi("Advanced Rust Book + Rustlings", "Rust Book nâng cao + Rustlings"),
+      evm: {
+        title: bi("Piece A: front end + invariant tests", "Sản phẩm A: front end + invariant test"),
         tasks: [
-          bi("Rust Book ch.15: Box, Rc, RefCell", "Rust Book ch.15: Box, Rc, RefCell"),
-          bi("Rust Book ch.16: threads, channels, Mutex, Arc", "Rust Book ch.16: threads, channels, Mutex, Arc"),
-          bi("Rust Book ch.17–18: async basics, trait objects", "Rust Book ch.17–18: async cơ bản, trait objects"),
-          bi("Finish 100% of Rustlings", "Hoàn thành 100% Rustlings"),
+          bi("Next.js front end with wagmi/viem", "Front end Next.js với wagmi/viem"),
+          bi("Wallet connection with clear error and loading states", "Kết nối ví, xử lý rõ trạng thái lỗi và đang tải"),
+          bi("Foundry invariant and fuzz tests", "Invariant và fuzz test bằng Foundry"),
         ],
-        links: [L.rustBook, L.rustlings],
+        links: [L.wagmi, L.viem, L.nextjs, L.foundry],
       },
-      solidity: {
-        title: bi("Rewrite an old contract with Foundry", "Viết lại 1 contract cũ bằng Foundry"),
+      rust: {
+        title: bi("Finish the course + Rust Book ch.15–16", "Hoàn thành khoá học + Rust Book ch.15–16"),
         tasks: [
-          bi("Pick an old contract (DaoLaunch vesting / staking)", "Chọn contract cũ (vesting / staking của DaoLaunch)"),
-          bi("Port it to Foundry with unit tests", "Port sang Foundry, viết unit test"),
-          bi("Measure gas with forge snapshot", "Đo gas bằng forge snapshot"),
-          bi("Push the repo to GitHub", "Push repo lên GitHub"),
+          bi("Finish course days 6–7 (Tuesday and Thursday)", "Xong ngày 6–7 của khoá (Thứ Ba và Thứ Năm)"),
+          "Rust Book ch.15: Box, Rc, RefCell",
+          "Rust Book ch.16: threads, channels, Mutex, Arc",
+          bi("Finish the remaining Rustlings", "Làm nốt phần Rustlings còn lại"),
         ],
-        links: [L.foundry, L.openzeppelin],
+        links: [L.rustCourse, L.rustBook, L.rustlings],
       },
       english: {
-        title: bi("Tell your 3 projects in English", "Kể 3 dự án bằng tiếng Anh"),
+        title: bi("Two project stories in one take", "Hai câu chuyện dự án, ghi một lần"),
         tasks: [
-          bi("Tamameme: problem, role, result", "Tamameme: vấn đề, vai trò, kết quả"),
-          bi("WritersBase: architecture, automatic royalties", "WritersBase: kiến trúc, royalty tự động"),
-          bi("Titan: validators, Go / Rust APIs", "Titan: validator, API Go / Rust"),
-          bi("Record each story in ≤ 2 minutes", "Ghi âm mỗi câu chuyện ≤ 2 phút"),
+          bi("Tamameme: problem, your role, result", "Tamameme: vấn đề, vai trò của bạn, kết quả"),
+          bi("Titan: validators and Go / Rust APIs", "Titan: validator và API Go / Rust"),
+          bi("Record each in under 2 minutes, with no edits", "Ghi mỗi câu chuyện dưới 2 phút, không sửa"),
         ],
       },
-      interview: {
-        title: bi("Rust: traits, generics, lifetimes", "Rust: traits, generics, lifetimes"),
+      security: {
+        title: bi("Ethernaut levels 1–10", "Ethernaut level 1–10"),
         tasks: [
-          bi("Traits vs generics, trait objects (dyn)", "Trait vs generic, trait objects (dyn)"),
-          bi("Lifetime elision, 'static", "Lifetime elision, 'static"),
-          bi("Smart pointers: Box / Rc / RefCell / Arc", "Smart pointers: Box / Rc / RefCell / Arc"),
-          bi("Write down 10 questions with answers", "Ghi 10 câu hỏi kèm câu trả lời"),
+          bi("Solve levels 1–10", "Giải level 1–10"),
+          bi("Write down each level's vulnerability and fix", "Ghi lỗ hổng và cách sửa của từng level"),
+        ],
+        links: [L.ethernaut],
+      },
+      interview: {
+        title: bi("Questions on dApp and integration work", "Câu hỏi về dApp và tích hợp"),
+        tasks: [
+          bi("Explain how a dApp talks to a contract, wallet to indexer", "Giải thích dApp nói chuyện với contract thế nào, từ ví đến indexer"),
+          bi("Explain how you test a contract before deployment", "Giải thích cách bạn test contract trước khi deploy"),
+          bi("Answer 10 questions out loud, flag the weak ones", "Trả lời to 10 câu, đánh dấu câu còn yếu"),
         ],
       },
       upwork: {
-        title: bi("Finish the profile", "Hoàn thiện profile"),
+        title: bi("Portfolio, proposal templates, client filter", "Portfolio, mẫu proposal, bộ lọc client"),
         tasks: [
-          bi("Specialized profile: Blockchain / Rust", "Specialized profile: Blockchain / Rust"),
-          bi("Save 3 job searches: Rust, Solana, Solidity", "Lưu 3 bộ tìm kiếm job: Rust, Solana, Solidity"),
+          bi("Write 2 proposal templates: dApp and integration", "Viết 2 mẫu proposal: dApp và tích hợp"),
           bi(
-            "Write 2 proposal templates: Solidity and Rust / Solana",
-            "Viết 2 mẫu proposal: Solidity và Rust / Solana",
+            "Save searches: solidity, web3, dapp, blockchain, rust blockchain, solana",
+            "Lưu bộ tìm kiếm: solidity, web3, dapp, blockchain, rust blockchain, solana",
           ),
+          bi(
+            "Client filter: payment verified, spend ≥ $1K, hires made; divide total spent by hours to see the real rate ceiling",
+            "Bộ lọc client: đã xác minh, spend ≥ $1K, đã từng thuê; lấy tổng chi chia số giờ để thấy trần rate thật",
+          ),
+          bi(
+            "Set up a disposable VM with no keys, seeds or .env for any repo received before a contract",
+            "Dựng VM dùng một lần, không có key, seed, .env để mở mọi repo nhận trước hợp đồng",
+          ),
+          bi(
+            "Read the real Connects cost on your saved jobs and budget for 40 proposals",
+            "Đọc số Connects thật trên các job đã lưu và lập ngân sách cho 40 proposal",
+          ),
+          marketLog,
         ],
         links: [L.upwork],
       },
@@ -373,55 +470,74 @@ export const WEEKS: Week[] = [
   {
     week: 3,
     focus: {
+      evm: {
+        title: bi("Finish piece A", "Hoàn thành sản phẩm A"),
+        tasks: [
+          bi("Node.js indexer for the contract's events", "Indexer Node.js cho event của contract"),
+          bi("Deploy everything and record a 2-minute demo", "Deploy toàn bộ và quay demo 2 phút"),
+          bi("README with an architecture diagram", "README có sơ đồ kiến trúc"),
+          bi("Add piece A to your Upwork portfolio", "Đưa sản phẩm A vào portfolio Upwork"),
+        ],
+        links: [L.ponder, L.viem],
+      },
       rust: {
         title: bi("Practice: a Rust CLI project", "Thực hành: project Rust CLI"),
         tasks: [
           bi("Exercism Rust: 10 exercises", "Exercism Rust: 10 bài"),
           bi("Error handling with thiserror / anyhow", "Error handling với thiserror / anyhow"),
           bi("Tests + cargo clippy + cargo fmt", "Test + cargo clippy + cargo fmt"),
-          bi("Tokio basics: async / await, spawn", "Tokio cơ bản: async / await, spawn"),
-          bi(
-            "CLI project (e.g. read blocks over RPC) + README",
-            "Project CLI (ví dụ: đọc block qua RPC) + README",
-          ),
+          bi("CLI that reads blocks over RPC, with a README", "CLI đọc block qua RPC, có README"),
         ],
-        links: [L.exercism, L.tokio],
+        links: [L.exercism, L.clippy, L.tokio],
       },
-      solidity: {
-        title: bi("Ethernaut levels 1–10", "Ethernaut level 1–10"),
+      english: {
+        title: bi("Upwork video interview practice", "Luyện video interview trên Upwork"),
         tasks: [
-          bi("Solve levels 1–10", "Giải level 1–10"),
-          bi("Write down each level's vulnerability and fix", "Ghi lỗ hổng và cách sửa của từng level"),
+          bi(
+            "Record 5 answers in one take: Upwork's recorded interview allows no retakes",
+            "Ghi 5 câu trả lời một lần: video interview của Upwork không cho làm lại",
+          ),
+          bi("Speak while you think; avoid long silences", "Nói thành lời khi đang nghĩ, tránh im lặng lâu"),
+          bi("Listen back and fix one habit", "Nghe lại và sửa một thói quen"),
+        ],
+        links: [L.uma],
+      },
+      security: {
+        title: bi("Ethernaut levels 11–20", "Ethernaut level 11–20"),
+        tasks: [
+          bi("Solve levels 11–20", "Giải level 11–20"),
+          bi("Write down each vulnerability and fix", "Ghi lỗ hổng và cách sửa"),
         ],
         links: [L.ethernaut],
       },
-      english: {
-        title: bi("10 common HR questions", "10 câu hỏi HR phổ biến"),
-        tasks: [
-          "Why are you leaving? Why this company?",
-          "Strengths & weaknesses",
-          "Salary expectation",
-          bi("Record and grade yourself", "Ghi âm và tự chấm điểm"),
-        ],
-        links: [L.behavioral],
-      },
       interview: {
-        title: bi("Phase 1 review", "Ôn tập giai đoạn 1"),
+        title: bi("Phase 1 review + first mock call", "Ôn giai đoạn 1 + gọi thử lần đầu"),
         tasks: [
-          bi(
-            "Self-check: ownership, traits, lifetimes, smart pointers, concurrency",
-            "Tự kiểm tra: ownership, traits, lifetimes, smart pointers, concurrency",
-          ),
-          bi("Live coding: 5 LeetCode Easy problems in Rust", "Live coding: 5 bài LeetCode Easy bằng Rust"),
+          bi("30-minute mock client call (a friend or AI)", "Gọi thử 30 phút với client (bạn bè hoặc AI)"),
+          bi("Rust self-check: ownership, traits, lifetimes", "Tự kiểm tra Rust: ownership, traits, lifetimes"),
+          bi("Note weak answers and practise them", "Ghi câu trả lời yếu và luyện lại"),
         ],
-        links: [L.leetcode],
       },
-      upwork: proposals(),
+      upwork: proposals(10, [
+        bi("Bid $35–$45/hour, small scope with milestones", "Bid $35–$45/giờ, scope nhỏ có milestone"),
+        bi(
+          "Client calls override study slots: US evening is about 7–10 AM in Vietnam",
+          "Cuộc gọi với client được ưu tiên hơn giờ học: tối ở Mỹ là khoảng 7–10 giờ sáng Việt Nam",
+        ),
+      ]),
     },
   },
   {
     week: 4,
     focus: {
+      evm: {
+        title: bi("Piece B: exchange integration service", "Sản phẩm B: service tích hợp sàn giao dịch"),
+        tasks: [
+          bi("Node.js or Go service against one exchange API", "Service Node.js hoặc Go với API của một sàn"),
+          bi("Retries, rate limits and idempotency", "Retry, rate limit và idempotency"),
+          bi("Reconciliation job and alerts", "Job đối soát và cảnh báo"),
+        ],
+      },
       rust: {
         title: "Solana fundamentals",
         tasks: [
@@ -432,40 +548,60 @@ export const WEEKS: Week[] = [
         ],
         links: [L.solanaDocs, L.programExamples],
       },
-      solidity: {
-        title: bi("Ethernaut levels 11–20", "Ethernaut level 11–20"),
-        tasks: [
-          bi("Solve levels 11–20", "Giải level 11–20"),
-          bi("Write down each vulnerability and fix", "Ghi lỗ hổng và cách sửa"),
-        ],
-        links: [L.ethernaut],
-      },
       english: {
-        title: "STAR stories 1–5",
+        title: bi("Clarifying requirements", "Làm rõ yêu cầu"),
         tasks: [
-          bi("Your hardest technical challenge", "Thử thách kỹ thuật khó nhất"),
-          bi("A production bug you fixed", "Lần sửa bug trên production"),
-          bi("A disagreement with your team", "Lần bất đồng với team"),
-          bi("A time you led the team", "Lần dẫn dắt team"),
-          bi("A failure and what you learned", "Lần thất bại và bài học"),
+          bi("Prepare 10 questions on scope, timeline and budget", "Chuẩn bị 10 câu hỏi về scope, timeline, ngân sách"),
+          bi("Role-play a discovery call and record it", "Đóng vai cuộc gọi tìm hiểu yêu cầu và ghi lại"),
         ],
-        links: [L.behavioral],
+      },
+      security: {
+        title: bi("Finding bugs with fuzz and invariant tests", "Tìm lỗi bằng fuzz và invariant test"),
+        tasks: [
+          bi("Fuzz tests that reproduce a known bug", "Fuzz test tái hiện một lỗi đã biết"),
+          bi("Invariant tests with a handler", "Invariant test với handler"),
+        ],
+        links: [L.foundry],
       },
       interview: {
-        title: "Rust: concurrency & error handling",
+        title: bi("Explain Solana to a client", "Giải thích Solana cho client"),
         tasks: [
-          "Send / Sync, Arc<Mutex<T>>",
-          bi("Result, the ? operator, custom errors", "Result, toán tử ?, custom error"),
-          bi("5 LeetCode Medium problems in Rust", "5 bài LeetCode Medium bằng Rust"),
+          "Account model vs EVM storage",
+          bi("When Solana fits a client better than EVM, and when it does not", "Khi nào Solana hợp với client hơn EVM và khi nào không"),
         ],
-        links: [L.leetcode],
+        links: [L.solanaDocs],
       },
-      upwork: proposals([bi("Adjust the proposal template from feedback", "Chỉnh mẫu proposal theo phản hồi")]),
+      upwork: proposals(8, [
+        bi(
+          "Email the Superteam Vietnam chapter to ask whether its grant is still open",
+          "Email Superteam Vietnam hỏi grant còn nhận đơn không",
+        ),
+      ]),
+      review: {
+        title: bi("Weekly review + decision on Rust weight", "Review tuần + quyết định tỷ trọng Rust"),
+        tasks: [
+          bi("Compare total hours with the plan", "So tổng giờ học với kế hoạch"),
+          bi(
+            "Decide: if filtered solana + rust blockchain jobs reach a third of filtered solidity jobs and pay $20+/hour more, move time from EVM to Rust",
+            "Quyết định: nếu job solana + rust blockchain qua lọc đạt 1/3 job solidity qua lọc và trả cao hơn từ $20/giờ, chuyển bớt giờ từ EVM sang Rust",
+          ),
+          bi("Pick next week's top 3 priorities", "Chọn 3 ưu tiên cho tuần sau"),
+        ],
+      },
     },
   },
   {
     week: 5,
     focus: {
+      evm: {
+        title: bi("Finish piece B: stablecoin payment flow", "Hoàn thành sản phẩm B: luồng thanh toán stablecoin"),
+        tasks: [
+          bi("Stablecoin payment flow with status tracking", "Luồng thanh toán stablecoin có theo dõi trạng thái"),
+          bi("Tests and failure handling", "Test và xử lý lỗi"),
+          bi("README and client-facing case study", "README và case study cho client đọc"),
+          bi("Add piece B to your Upwork portfolio", "Đưa sản phẩm B vào portfolio Upwork"),
+        ],
+      },
       rust: {
         title: "PDA, CPI, SPL Token",
         tasks: [
@@ -476,93 +612,67 @@ export const WEEKS: Week[] = [
         ],
         links: [L.solanaDocs, L.programExamples],
       },
-      solidity: {
-        title: bi("Foundry: fuzz, invariant, fork tests", "Foundry: fuzz, invariant, fork test"),
+      english: {
+        title: bi("Think aloud while coding", "Vừa code vừa nói"),
         tasks: [
-          bi("Fuzz tests for the week 2 contract", "Fuzz test cho contract tuần 2"),
-          bi("Invariant tests with a handler", "Invariant test với handler"),
-          bi("Mainnet fork test", "Fork test trên mainnet"),
+          bi("Solve a small task while narrating in English", "Giải một bài nhỏ, vừa làm vừa nói tiếng Anh"),
+          bi("Collect 20 phrases you use while coding", "Ghi 20 cụm từ hay dùng khi code"),
+        ],
+      },
+      security: {
+        title: bi("Run an AI agent, then verify it", "Chạy AI agent rồi kiểm chứng"),
+        tasks: [
+          bi("Run an agent on a known-vulnerable repo", "Chạy agent trên một repo có lỗi đã biết"),
+          bi("Prove every finding with a Foundry PoC", "Chứng minh mọi finding bằng PoC Foundry"),
+          bi("Log false positives and missed bugs", "Ghi lại báo sai và lỗi bị bỏ sót"),
         ],
         links: [L.foundry],
       },
-      english: {
-        title: "STAR stories 6–10",
-        tasks: [
-          bi("Write 5 more STAR stories", "Viết thêm 5 câu chuyện STAR"),
-          bi("Record all 10 stories and listen back", "Ghi âm cả 10 câu chuyện, tự nghe lại"),
-        ],
-        links: [L.behavioral],
-      },
       interview: {
-        title: bi("Solana basics questions", "Câu hỏi Solana cơ bản"),
+        title: bi("Solana questions clients ask", "Câu hỏi Solana client hay hỏi"),
         tasks: [
-          "Account model vs EVM storage",
-          bi("What is a PDA and why the bump?", "PDA là gì, vì sao cần bump"),
-          "Rent, compute units",
+          bi("Explain PDAs and CPI in plain English", "Giải thích PDA và CPI bằng tiếng Anh đơn giản"),
+          bi("Compare SPL Token with ERC-20", "So sánh SPL Token với ERC-20"),
+          bi("Answer 10 questions out loud, flag the weak ones", "Trả lời to 10 câu, đánh dấu câu còn yếu"),
         ],
         links: [L.solanaDocs],
       },
-      upwork: proposals(),
+      upwork: proposals(8),
     },
   },
   {
     week: 6,
     focus: {
+      evm: {
+        title: bi("Piece C: RPC node deployment kit", "Sản phẩm C: bộ deploy RPC node"),
+        tasks: [
+          bi("Deploy an RPC node on cloud with infrastructure as code", "Deploy RPC node trên cloud bằng infrastructure as code"),
+          bi("Monitoring and alerts", "Monitoring và cảnh báo"),
+          bi("Measure sync health and latency", "Đo tình trạng sync và độ trễ"),
+        ],
+        links: [L.prometheus],
+      },
       rust: {
-        title: bi("Anchor + start Project 1", "Anchor + bắt đầu Project 1"),
+        title: bi("Anchor + design piece E", "Anchor + thiết kế sản phẩm E"),
         tasks: [
           "Anchor: account constraints, errors, events",
           bi("Anchor tests in TypeScript", "Test Anchor bằng TypeScript"),
           bi(
-            "Design Project 1 (escrow / marketplace): list, buy, cancel, fee",
-            "Thiết kế Project 1 (escrow / marketplace): list, buy, cancel, fee",
+            "Design piece E: a useful program such as USDC invoices or escrow, not a memecoin tool",
+            "Thiết kế sản phẩm E: một program hữu ích như hoá đơn USDC hoặc escrow, không làm tool memecoin",
           ),
-          bi("Code the list + buy instructions", "Code instruction list + buy"),
+          bi("Code the core instructions", "Code các instruction chính"),
         ],
         links: [L.anchor],
-      },
-      solidity: {
-        title: "Proxy + EIP-712",
-        tasks: [
-          "UUPS vs Transparent proxy, storage collision",
-          "EIP-712 + permit (ERC-2612)",
-          bi("Write an upgradeable contract and test the upgrade", "Viết 1 contract upgradeable và test upgrade"),
-        ],
-        links: [L.openzeppelin],
       },
       english: {
-        title: bi("Shadowing tech talks", "Shadowing tech talk"),
+        title: bi("Talking about scope and rates", "Trao đổi về scope và giá"),
         tasks: [
-          bi("15 minutes every morning shadowing a tech talk", "Mỗi sáng 15 phút nói nhại theo 1 tech talk"),
-          bi("Collect 20 common technical phrases", "Ghi 20 cụm từ kỹ thuật hay dùng"),
+          bi("Practise quoting a rate without apologising", "Tập báo giá tự tin, không xin lỗi"),
+          bi("Practise saying no to scope creep", "Tập từ chối phần việc phát sinh"),
         ],
       },
-      interview: {
-        title: bi("Solana: Anchor & security", "Solana: Anchor & bảo mật"),
-        tasks: [
-          bi("Missing signer / owner checks", "Thiếu signer / owner check"),
-          "Account confusion, PDA collision",
-          "Arithmetic overflow",
-        ],
-        links: [L.anchor],
-      },
-      upwork: proposals(),
-    },
-  },
-  {
-    week: 7,
-    focus: {
-      rust: {
-        title: bi("Finish Project 1", "Hoàn thiện Project 1"),
-        tasks: [
-          bi("cancel, fee and royalty instructions", "Instruction cancel, fee, royalty"),
-          bi("Security review with the week 6 checklist", "Kiểm tra bảo mật theo checklist tuần 6"),
-          bi("Deploy to devnet", "Deploy lên devnet"),
-          bi("TypeScript client + README + architecture diagram", "Client TypeScript + README + sơ đồ kiến trúc"),
-        ],
-        links: [L.anchor, L.solanaDocs],
-      },
-      solidity: {
+      security: {
         title: "Damn Vulnerable DeFi 1–5",
         tasks: [
           bi("Solve challenges 1–5", "Giải challenge 1–5"),
@@ -570,271 +680,379 @@ export const WEEKS: Week[] = [
         ],
         links: [L.dvd],
       },
-      english: {
-        title: bi("Present Project 1", "Thuyết trình Project 1"),
+      interview: {
+        title: bi("System design: indexer and integrations", "System design: indexer và tích hợp"),
         tasks: [
-          bi("A 5-minute presentation in English", "Bài thuyết trình 5 phút bằng tiếng Anh"),
-          bi("Record a demo video", "Quay video demo"),
+          bi("Design an indexer that survives chain reorgs", "Thiết kế indexer chịu được chain reorg"),
+          bi("Design idempotent payment processing", "Thiết kế xử lý thanh toán idempotent"),
         ],
+        links: [L.systemDesign],
+      },
+      upwork: proposals(7),
+    },
+  },
+  {
+    week: 7,
+    focus: {
+      evm: {
+        title: bi("Finish piece C", "Hoàn thành sản phẩm C"),
+        tasks: [
+          bi("Failover between RPC nodes", "Failover giữa các RPC node"),
+          bi("Runbook for common incidents", "Runbook cho các sự cố thường gặp"),
+          bi("Case study: turn validator experience into something clients buy", "Case study: biến kinh nghiệm validator thành thứ client mua"),
+          bi("Add piece C to your Upwork portfolio", "Đưa sản phẩm C vào portfolio Upwork"),
+        ],
+        links: [L.prometheus],
+      },
+      rust: {
+        title: bi("Piece E: program + tests", "Sản phẩm E: program + test"),
+        tasks: [
+          bi("Finish all instructions", "Hoàn thành mọi instruction"),
+          bi("Tests for success and failure paths", "Test cả luồng thành công và thất bại"),
+          bi("Handle edge cases: rent, closing accounts, authority", "Xử lý edge case: rent, đóng account, authority"),
+        ],
+        links: [L.anchor],
+      },
+      english: {
+        title: bi("Demo walkthrough", "Thuyết trình demo"),
+        tasks: [
+          bi("A 5-minute English walkthrough of pieces A and B", "Thuyết trình 5 phút bằng tiếng Anh về sản phẩm A và B"),
+          bi("Record it and fix what sounds unclear", "Ghi lại và sửa chỗ chưa rõ"),
+        ],
+      },
+      security: {
+        title: bi("Proxies and upgrade safety", "Proxy và an toàn khi upgrade"),
+        tasks: [
+          "UUPS vs Transparent proxy, storage collision",
+          bi("Write an upgradeable contract and test the upgrade", "Viết contract upgradeable và test upgrade"),
+        ],
+        links: [L.openzeppelin],
       },
       interview: {
-        title: bi("Solana technical mock", "Mock kỹ thuật Solana"),
+        title: bi("Mock client call: your portfolio", "Gọi thử với client: portfolio của bạn"),
         tasks: [
-          bi("45-minute self mock: explain Project 1", "Tự mock 45 phút: giải thích Project 1"),
-          bi("Answer Solana security questions", "Trả lời câu hỏi bảo mật Solana"),
+          bi("45-minute mock: explain a piece and answer questions", "Gọi thử 45 phút: giải thích một sản phẩm và trả lời câu hỏi"),
+          bi("Note weak answers and practise them", "Ghi câu trả lời yếu và luyện lại"),
         ],
       },
-      upwork: {
-        title: bi("Add Project 1 to the portfolio", "Đưa Project 1 vào portfolio"),
+      upwork: proposals(7, [bi("Total so far should reach about 40 proposals", "Tổng tới giờ đạt khoảng 40 proposal")]),
+      review: {
+        title: bi("Weekly review + decision on proposals", "Review tuần + quyết định về proposal"),
         tasks: [
-          bi("Add the repo + demo video to your profile", "Thêm repo + video demo vào profile"),
-          bi("Send ~5 proposals for Solana jobs", "Gửi ~5 proposal cho job Solana"),
+          bi("Compare total hours with the plan", "So tổng giờ học với kế hoạch"),
+          bi(
+            "Decide: under 2 replies after 40 targeted proposals means stop adding tech and fix profile, proposals and English first",
+            "Quyết định: dưới 2 phản hồi sau 40 proposal đúng mục tiêu thì dừng học thêm công nghệ, sửa profile, proposal và tiếng Anh trước",
+          ),
+          bi("Pick next week's top 3 priorities", "Chọn 3 ưu tiên cho tuần sau"),
         ],
-        links: [L.upwork],
       },
     },
   },
   {
     week: 8,
     focus: {
-      rust: {
-        title: bi("Foundations for core chain work", "Nền tảng cho core chain"),
+      evm: {
+        title: bi("Client work, or make piece A mainnet-ready", "Việc cho client, hoặc đưa sản phẩm A lên mức mainnet"),
         tasks: [
-          bi(
-            "Deep async: tokio runtime, select!, channels, Send / Sync, Pin",
-            "Async sâu: tokio runtime, select!, channels, Send / Sync, Pin",
-          ),
-          "Serialization: serde, borsh, bincode",
-          "Crypto: SHA-256 / Keccak, ed25519, secp256k1",
-          bi("Networking: TCP server / client with tokio", "Networking: TCP server / client với tokio"),
+          clientWorkFirst,
+          bi("Fix everything found by your own security review", "Sửa mọi lỗi do chính bạn review ra"),
+          bi("Gas report and optimisation", "Báo cáo và tối ưu gas"),
         ],
-        links: [L.asyncBook, L.tokio],
       },
-      solidity: {
-        title: "Damn Vulnerable DeFi 6–10",
+      rust: {
+        title: bi("Piece E: TypeScript client + indexer", "Sản phẩm E: client TypeScript + indexer"),
         tasks: [
-          bi("Solve challenges 6–10", "Giải challenge 6–10"),
-          bi("Write down the attack techniques", "Ghi lại kỹ thuật tấn công"),
+          bi("TypeScript client for every instruction", "Client TypeScript cho mọi instruction"),
+          bi("Small web page people can actually use", "Trang web nhỏ mà người dùng thật dùng được"),
+          bi("Indexer for program events", "Indexer cho event của program"),
         ],
-        links: [L.dvd],
+        links: [L.anchor, L.solanaDocs],
       },
       english: {
-        title: bi("Explain ownership & async in English", "Giải thích ownership & async bằng tiếng Anh"),
+        title: bi("Weekly mock client calls", "Gọi thử với client mỗi tuần"),
         tasks: [
-          bi("2 minutes per concept, recorded", "Mỗi khái niệm nói 2 phút, ghi âm"),
-          bi("Listen back and fix awkward wording", "Nghe lại, sửa từ dùng chưa chuẩn"),
+          bi("One mock call with a friend or AI", "Một buổi gọi thử với bạn bè hoặc AI"),
+          bi("Note weak spots and practise them", "Ghi điểm yếu, luyện lại"),
         ],
       },
-      interview: {
-        title: "Async Rust",
-        tasks: ["Future, poll, executor", "tokio::spawn vs spawn_blocking", bi("Deadlocks and cancellation", "Deadlock và cancellation")],
-        links: [L.asyncBook],
+      security: {
+        title: bi("Piece D: pick a target and review it", "Sản phẩm D: chọn mục tiêu và review"),
+        tasks: [
+          bi("Pick an open-source contract set with no live audit contest", "Chọn một bộ contract mã nguồn mở, không nằm trong audit contest"),
+          bi("Run an agent and review by hand", "Chạy agent và tự review"),
+          bi("List candidate findings", "Liệt kê các finding nghi ngờ"),
+        ],
+        links: [L.solodit],
       },
-      upwork: proposals(),
+      interview: {
+        title: bi("Rust screening questions", "Câu hỏi sàng lọc Rust"),
+        tasks: [
+          bi("Ownership, borrowing and lifetimes in plain English", "Ownership, borrowing, lifetimes bằng tiếng Anh đơn giản"),
+          bi("Send, Sync and Arc<Mutex<T>>", "Send, Sync và Arc<Mutex<T>>"),
+          bi("Result, the ? operator, custom errors", "Result, toán tử ?, custom error"),
+          bi("Show a Clippy-clean code sample with rustdoc", "Chuẩn bị code mẫu sạch Clippy, có rustdoc"),
+        ],
+        links: [L.clippy],
+      },
+      upwork: proposals(5, [
+        bi("After 2–3 reviews raise your rate to $50–$60/hour", "Sau 2–3 review, tăng giá lên $50–$60/giờ"),
+      ]),
     },
   },
   {
     week: 9,
     focus: {
-      rust: {
-        title: bi("Mini-chain (part 1)", "Mini-chain (phần 1)"),
+      evm: {
+        title: bi("Client work, or production hardening", "Việc cho client, hoặc củng cố production"),
         tasks: [
-          "Block, header, hash, merkle root",
-          bi("Signed transactions + verification", "Transaction có chữ ký + verify"),
-          bi("Mempool + state (account balances)", "Mempool + state (số dư account)"),
-          bi("Storage with RocksDB or sled", "Lưu trữ bằng RocksDB hoặc sled"),
-          bi("Tests for every module", "Test cho từng module"),
+          clientWorkFirst,
+          bi("CI for tests and deployments on pieces A and B", "CI cho test và deploy của sản phẩm A, B"),
+          bi("Structured logs and error tracking", "Log có cấu trúc và theo dõi lỗi"),
         ],
       },
-      solidity: {
-        title: bi("ERC-4626 + AMM math", "ERC-4626 + toán AMM"),
+      rust: {
+        title: bi("Piece E: security checks + devnet", "Sản phẩm E: kiểm tra bảo mật + devnet"),
         tasks: [
-          bi("ERC-4626 vaults and rounding", "ERC-4626 vault và cách làm tròn"),
-          "Uniswap v2: constant product",
-          bi("Uniswap v3: concentrated liquidity basics", "Uniswap v3: concentrated liquidity cơ bản"),
+          bi("Check signers, owners and PDA seeds", "Kiểm tra signer, owner và PDA seed"),
+          bi("Deploy to devnet and test with real wallets", "Deploy devnet và test với ví thật"),
+          bi("Invite 3 people to try it", "Mời 3 người dùng thử"),
         ],
-        links: [L.uniswapBook, L.openzeppelin],
+        links: [L.solanaDocs],
       },
       english: {
-        title: bi("Explain PDAs and reentrancy in English", "Giải thích PDA và reentrancy bằng tiếng Anh"),
+        title: bi("Weekly mock client calls", "Gọi thử với client mỗi tuần"),
         tasks: [
-          bi("2 minutes per concept, recorded", "Mỗi khái niệm nói 2 phút, ghi âm"),
-          bi("Ask yourself 3 follow-up questions and answer them", "Tự đặt 3 câu hỏi phản biện và trả lời"),
+          bi("One mock call with a friend or AI", "Một buổi gọi thử với bạn bè hoặc AI"),
+          bi("Explain reentrancy to a non-technical client", "Giải thích reentrancy cho client không biết kỹ thuật"),
         ],
       },
-      interview: {
-        title: bi("Blockchain core questions", "Câu hỏi blockchain core"),
-        tasks: ["Merkle tree, Patricia trie", "PoW vs PoS, finality", "Mempool, fee market"],
+      security: {
+        title: bi("Finish piece D: public review", "Hoàn thành sản phẩm D: bản review công khai"),
+        tasks: [
+          bi("Write a Foundry PoC for each real finding", "Viết PoC Foundry cho mỗi finding thật"),
+          bi("Write up where the agent was wrong", "Ghi rõ agent đã sai ở đâu"),
+          bi("Publish the report and add it to your portfolio", "Công bố báo cáo và đưa vào portfolio"),
+        ],
+        links: [L.foundry, L.solodit],
       },
-      upwork: proposals(),
+      interview: {
+        title: bi("Questions on payments and stablecoins", "Câu hỏi về thanh toán và stablecoin"),
+        tasks: [
+          bi("Explain a stablecoin payment flow end to end", "Giải thích luồng thanh toán stablecoin từ đầu đến cuối"),
+          bi("Explain reconciliation and failure recovery", "Giải thích đối soát và khôi phục khi lỗi"),
+        ],
+      },
+      upwork: {
+        title: bi("Apply to Arc.dev + keep bidding", "Nộp Arc.dev + tiếp tục bid"),
+        tasks: [
+          bi("Apply to Arc.dev with your CV and portfolio", "Nộp Arc.dev với CV và portfolio"),
+          bi("Send 5 tailored proposals", "Gửi 5 proposal viết riêng"),
+          marketLog,
+        ],
+        links: [L.arc, L.upwork],
+      },
     },
   },
   {
     week: 10,
     focus: {
-      rust: {
-        title: bi("Mini-chain (part 2)", "Mini-chain (phần 2)"),
+      evm: {
+        title: bi("Client work, or wallet UX upgrade", "Việc cho client, hoặc nâng cấp trải nghiệm ví"),
         tasks: [
-          bi("P2P with rust-libp2p: gossip blocks and transactions", "P2P bằng rust-libp2p: gossip block và transaction"),
-          bi("Simple PoS consensus (rotating validators)", "Consensus PoS đơn giản (validator luân phiên)"),
-          "JSON-RPC: sendTransaction, getBlock",
-          bi("Run 3 local nodes that stay in sync", "Chạy 3 node local đồng bộ được với nhau"),
-        ],
-        links: [L.libp2p],
-      },
-      solidity: {
-        title: bi("ERC-4337 + gas optimization", "ERC-4337 + tối ưu gas"),
-        tasks: [
+          clientWorkFirst,
           "Account abstraction: UserOperation, EntryPoint, bundler",
-          "Gas: storage packing, unchecked, calldata",
+          bi("Add a smoother wallet flow to piece A", "Thêm luồng ví mượt hơn cho sản phẩm A"),
         ],
         links: [L.erc4337],
       },
-      english: {
-        title: bi("System design vocabulary", "Từ vựng system design"),
+      rust: {
+        title: bi("Piece E: mainnet + first real users", "Sản phẩm E: mainnet + người dùng thật đầu tiên"),
         tasks: [
-          bi("Learn 30 terms: throughput, latency, sharding…", "Học 30 thuật ngữ: throughput, latency, sharding…"),
-          bi("Describe the mini-chain architecture in English", "Mô tả kiến trúc mini-chain bằng tiếng Anh"),
+          bi("Deploy to mainnet", "Deploy lên mainnet"),
+          bi("Get first real users", "Có người dùng thật đầu tiên"),
+          bi("README, demo video and Upwork case study", "README, video demo và case study trên Upwork"),
         ],
+        links: [L.solanaDocs, L.anchor],
+      },
+      english: {
+        title: bi("Explain Solana in plain English", "Giải thích Solana bằng tiếng Anh đơn giản"),
+        tasks: [
+          bi("Explain PDAs to a non-technical client", "Giải thích PDA cho client không biết kỹ thuật"),
+          bi("One mock call with a friend or AI", "Một buổi gọi thử với bạn bè hoặc AI"),
+        ],
+      },
+      security: {
+        title: bi("Solana security checklist on piece E", "Checklist bảo mật Solana cho sản phẩm E"),
+        tasks: [
+          bi("Missing signer and owner checks", "Thiếu kiểm tra signer và owner"),
+          "Account confusion, PDA collision, arithmetic overflow",
+        ],
+        links: [L.anchor],
       },
       interview: {
-        title: bi("Solidity questions", "Câu hỏi Solidity"),
+        title: bi("Solana: Anchor and security questions", "Solana: câu hỏi về Anchor và bảo mật"),
         tasks: [
-          "Storage layout, delegatecall",
-          "Reentrancy, oracle manipulation",
-          bi("Proxy upgrade risks", "Rủi ro khi upgrade proxy"),
+          bi("Explain piece E in 10 minutes", "Giải thích sản phẩm E trong 10 phút"),
+          bi("Answer Solana security questions", "Trả lời câu hỏi bảo mật Solana"),
         ],
       },
-      upwork: proposals(),
+      upwork: {
+        title: bi("Direct applications + grants", "Nộp trực tiếp + grant"),
+        tasks: [
+          bi("List companies hiring globally and apply to 3 with Go or Solidity", "Liệt kê công ty tuyển toàn cầu, nộp 3 nơi với Go hoặc Solidity"),
+          bi("Apply for a Solana grant if piece E has real users", "Xin grant Solana nếu sản phẩm E đã có người dùng thật"),
+          bi("Send 5 tailored proposals", "Gửi 5 proposal viết riêng"),
+          marketLog,
+        ],
+        links: [L.matterLabs, L.solanaGrants, L.superteam],
+      },
     },
   },
   {
     week: 11,
     focus: {
-      rust: {
-        title: "Layer 2: rollups, Reth, revm",
+      evm: {
+        title: bi("Client work, or a stablecoin feature", "Việc cho client, hoặc thêm tính năng stablecoin"),
         tasks: [
-          "Rollup: sequencer, batch, state root, data availability",
-          "Optimistic vs ZK rollup: fraud proof vs validity proof",
-          bi("Read the Reth architecture: staged sync, revm", "Đọc kiến trúc Reth: staged sync, revm"),
-          bi("Execute an EVM transaction in Rust with revm", "Dùng revm thực thi 1 transaction EVM bằng Rust"),
-          bi("Read OP Stack and Kona (fault proofs in Rust)", "Đọc OP Stack và Kona (fault proof viết bằng Rust)"),
+          clientWorkFirst,
+          bi("Add one stablecoin or RWA feature clients keep asking for", "Thêm một tính năng stablecoin hoặc RWA mà client hay hỏi"),
         ],
-        links: [L.scaling, L.reth, L.revm, L.opDocs, L.kona],
       },
-      solidity: {
-        title: bi("Read audit reports", "Đọc audit report"),
+      rust: {
+        title: bi("Core chain: read the code", "Core chain: đọc code"),
         tasks: [
-          bi("Read 3 Code4rena reports", "Đọc 3 report trên Code4rena"),
-          bi("Summarize the 10 most common bugs", "Tóm tắt 10 lỗi hay gặp"),
+          bi("Pick Lighthouse (PoS) or Reth (EVM)", "Chọn Lighthouse (PoS) hoặc Reth (EVM)"),
+          bi("Read the architecture: sync, execution, consensus", "Đọc kiến trúc: sync, execution, consensus"),
+          bi("Run a local node and trace one block", "Chạy node local và theo dõi một block"),
         ],
-        links: [L.code4rena],
+        links: [L.lighthouse, L.reth],
       },
       english: {
         title: bi("Explain while drawing diagrams", "Vừa vẽ sơ đồ vừa giải thích"),
         tasks: [
-          bi("Draw a rollup architecture and explain it for 5 minutes", "Vẽ kiến trúc rollup và giải thích 5 phút"),
-          bi("Record and listen back", "Ghi âm, nghe lại"),
+          bi("Draw piece B's architecture and explain it for 5 minutes", "Vẽ kiến trúc sản phẩm B và giải thích 5 phút"),
+          bi("One mock call with a friend or AI", "Một buổi gọi thử với bạn bè hoặc AI"),
         ],
+      },
+      security: {
+        title: bi("Read real audit findings", "Đọc finding audit thật"),
+        tasks: [
+          bi("Read 10 high-severity findings on Solodit", "Đọc 10 finding mức cao trên Solodit"),
+          bi("Summarise the 5 most common patterns", "Tóm tắt 5 pattern hay gặp nhất"),
+        ],
+        links: [L.solodit],
       },
       interview: {
         title: bi("System design for blockchain", "System design cho blockchain"),
         tasks: [
-          bi("Design an indexer", "Thiết kế indexer"),
-          bi("Design an L1 ↔ L2 bridge", "Thiết kế bridge L1 ↔ L2"),
+          bi("Design an L1 ↔ L2 bridge at a high level", "Thiết kế tổng quan bridge L1 ↔ L2"),
           bi("Design validator / RPC infrastructure", "Thiết kế hạ tầng validator / RPC"),
         ],
         links: [L.systemDesign],
       },
-      upwork: proposals(),
+      upwork: proposals(5),
     },
   },
   {
     week: 12,
     focus: {
-      rust: {
-        title: "Project 2: mini rollup",
+      evm: {
+        title: bi("Client case studies", "Case study cho client"),
         tasks: [
-          bi("Sequencer that takes transactions and executes them with revm", "Sequencer nhận transaction, thực thi bằng revm"),
-          bi(
-            "Batch poster: push batches + state roots to a local L1 (anvil)",
-            "Batch poster: đẩy batch + state root lên L1 local (anvil)",
-          ),
-          bi("L1 contract that stores state roots (Solidity + Foundry)", "Contract L1 lưu state root (Solidity + Foundry)"),
-          bi("(Optional) prove the state transition with SP1", "(Tuỳ chọn) chứng minh state transition bằng SP1"),
-          bi("README + architecture diagram", "README + sơ đồ kiến trúc"),
+          clientWorkFirst,
+          bi("Rewrite pieces A, B and C as outcome-first case studies", "Viết lại sản phẩm A, B, C theo hướng nêu kết quả trước"),
+          bi("Update your Upwork portfolio and overview", "Cập nhật portfolio và overview trên Upwork"),
         ],
-        links: [L.revm, L.sp1, L.foundry, L.stylus],
       },
-      solidity: {
-        title: bi("Solidity project: marketplace", "Project Solidity: marketplace"),
+      rust: {
+        title: bi("Core chain: one small PR", "Core chain: một PR nhỏ"),
         tasks: [
-          "Marketplace: list, buy, cancel, fee, royalty",
-          "Foundry: unit + fuzz + invariant tests",
-          bi("Deploy to testnet + README", "Deploy testnet + README"),
+          bi("Pick a good-first issue", "Chọn một good-first issue"),
+          bi("Write the fix and tests", "Viết bản sửa và test"),
+          bi("Open the PR and answer review comments", "Mở PR và trả lời review"),
         ],
-        links: [L.foundry, L.openzeppelin],
+        links: [L.lighthouse, L.reth],
       },
       english: {
-        title: "Mock interviews 1–2",
+        title: bi("Mock calls with a real person", "Gọi thử với người thật"),
         tasks: [
-          bi("2 mock interviews (friends or AI)", "2 buổi mock (bạn bè hoặc AI)"),
-          bi("Note weak spots and practice them", "Ghi điểm yếu, luyện lại"),
+          bi("One call with a real English speaker", "Một buổi gọi với người nói tiếng Anh thật"),
+          bi("Compare against your week 3 recordings", "So sánh với bản ghi tuần 3"),
+        ],
+      },
+      security: {
+        title: bi("Client-ready review checklist", "Checklist review dùng cho client"),
+        tasks: [
+          bi("Write your own review checklist", "Tự viết checklist review của bạn"),
+          bi("Offer a small review as a service on Upwork", "Thêm gói review nhỏ trên Upwork"),
         ],
       },
       interview: {
-        title: bi("Layer 2 technical mock", "Mock kỹ thuật Layer 2"),
+        title: bi("Full mock client call", "Gọi thử trọn vẹn với client"),
         tasks: [
-          bi("Explain Project 2 in 10 minutes", "Giải thích Project 2 trong 10 phút"),
-          bi("Answer rollup questions", "Trả lời câu hỏi về rollup"),
+          bi("One-minute intro, two stories, one code walkthrough", "Giới thiệu 1 phút, 2 câu chuyện, 1 walkthrough code"),
+          bi("Handle a rate objection", "Xử lý khi client chê giá"),
         ],
       },
       upwork: {
-        title: bi("Add Project 2 to the portfolio", "Đưa Project 2 vào portfolio"),
+        title: bi("Toptal check + keep bidding", "Cân nhắc Toptal + tiếp tục bid"),
         tasks: [
-          bi("Add the repo + diagram to your profile", "Thêm repo + sơ đồ vào profile"),
-          bi("Send ~5 proposals for Rust / L2 jobs", "Gửi ~5 proposal cho job Rust / L2"),
+          bi("Apply to Toptal only if your English mocks now go well", "Chỉ nộp Toptal khi đã tự tin qua các buổi gọi thử"),
+          bi("Send 5 tailored proposals", "Gửi 5 proposal viết riêng"),
+          marketLog,
         ],
-        links: [L.upwork],
+        links: [L.toptal, L.upwork],
       },
     },
   },
   {
     week: 13,
     focus: {
-      rust: {
-        title: "Interview: Rust",
+      evm: {
+        title: bi("Client work, or a reusable starter kit", "Việc cho client, hoặc starter kit dùng lại được"),
         tasks: [
-          bi("A set of 50 Rust questions", "Bộ 50 câu hỏi Rust"),
-          bi("Live coding: 10 LeetCode Medium problems in Rust", "Live coding: 10 bài LeetCode Medium bằng Rust"),
-          bi("Review the 3 Rust repos, polish the READMEs", "Rà lại 3 repo Rust, sửa README"),
+          clientWorkFirst,
+          bi("Turn your best code into a starter kit for new client projects", "Biến code tốt nhất thành starter kit cho dự án mới"),
         ],
-        links: [L.leetcode, L.interviewHandbook],
       },
-      solidity: {
-        title: "Interview: Solidity",
+      rust: {
+        title: bi("Piece F: Rust crate for node operators", "Sản phẩm F: Rust crate cho người vận hành node"),
         tasks: [
-          bi("A set of 40 Solidity questions", "Bộ 40 câu hỏi Solidity"),
-          bi("Re-explain the Ethernaut / DVD challenges you solved", "Giải thích lại các bài Ethernaut / DVD đã làm"),
+          bi("Build a validator or RPC metrics tool", "Viết tool đo validator hoặc RPC"),
+          bi("Clean under Clippy", "Sạch cảnh báo Clippy"),
+          bi("Full rustdoc and tests", "Đủ rustdoc và test"),
         ],
+        links: [L.clippy, L.tokio],
       },
       english: {
-        title: "Mock interviews 3–5",
-        tasks: [bi("3 mock interviews", "3 buổi mock"), bi("Note weak spots and practice them", "Ghi điểm yếu, luyện lại")],
+        title: bi("Mock calls with a real person", "Gọi thử với người thật"),
+        tasks: [
+          bi("One call with a real English speaker", "Một buổi gọi với người nói tiếng Anh thật"),
+          bi("Note weak spots and practise them", "Ghi điểm yếu, luyện lại"),
+        ],
+      },
+      security: {
+        title: bi("Review one real change", "Review một thay đổi thật"),
+        tasks: [
+          bi("Review a real client change or an open-source PR", "Review một thay đổi của client hoặc PR mã nguồn mở"),
+          bi("Write it up in client-ready form", "Viết lại theo dạng gửi được cho client"),
+        ],
       },
       interview: {
-        title: bi("Full mock interviews", "Mock interview đầy đủ"),
+        title: bi("Rust and Solidity question sets", "Bộ câu hỏi Rust và Solidity"),
         tasks: [
-          bi("2 technical mocks", "2 buổi mock kỹ thuật"),
-          bi("Collect the answers that went badly", "Tổng hợp câu trả lời chưa tốt"),
+          bi("30 Solidity and EVM questions, answered out loud", "Trả lời to 30 câu Solidity và EVM"),
+          bi("20 Rust questions, answered out loud", "Trả lời to 20 câu Rust"),
         ],
-        links: [L.interviewHandbook],
       },
       upwork: {
-        title: bi("Client interviews", "Phỏng vấn với client"),
+        title: bi("Long-term clients", "Client dài hạn"),
         tasks: [
-          bi("Practice a 30-minute client call", "Luyện cuộc gọi 30 phút với client"),
-          bi("Prepare questions on scope, timeline and rate", "Chuẩn bị câu hỏi về scope, timeline, rate"),
+          bi("Offer existing clients ongoing work", "Đề xuất làm tiếp lâu dài với client hiện có"),
+          bi("Keep work on Upwork: off-platform moves need the conversion fee", "Giữ việc trên Upwork: chuyển ra ngoài phải trả conversion fee"),
+          bi("Send 5 tailored proposals", "Gửi 5 proposal viết riêng"),
+          marketLog,
         ],
         links: [L.upwork],
       },
@@ -843,77 +1061,99 @@ export const WEEKS: Week[] = [
   {
     week: 14,
     focus: {
-      rust: {
-        title: "Interview: system design + Solana / L2",
+      evm: {
+        title: bi("Portfolio polish", "Hoàn thiện portfolio"),
         tasks: [
-          bi("System design: 3 problems", "System design: 3 đề"),
-          bi("Rust / Solana / L2 technical mock", "Mock kỹ thuật Rust / Solana / L2"),
-          bi("Apply to 10 full-time Rust jobs", "Ứng tuyển 10 job Rust full-time"),
+          clientWorkFirst,
+          bi("Check that every demo and repo still works", "Kiểm tra mọi demo và repo vẫn chạy"),
+          bi("Add client reviews and numbers to each case study", "Thêm review và số liệu vào từng case study"),
         ],
-        links: [L.systemDesign],
       },
-      solidity: {
-        title: bi("Audit-style code review", "Code review kiểu audit"),
+      rust: {
+        title: bi("Finish piece F", "Hoàn thành sản phẩm F"),
         tasks: [
-          bi("Find bugs in 3 sample contracts", "Tìm bug trong 3 contract mẫu"),
-          bi("Write a short report for each", "Viết báo cáo ngắn cho từng contract"),
+          bi("Publish the crate with a README and example", "Publish crate kèm README và ví dụ"),
+          bi("Add it to your portfolio and CV", "Đưa vào portfolio và CV"),
+          bi("Apply to 5 Rust or Go roles that hire globally", "Nộp 5 vị trí Rust hoặc Go tuyển toàn cầu"),
         ],
-        links: [L.code4rena],
+        links: [L.clippy, L.matterLabs],
       },
       english: {
-        title: "Mock interviews 6–8",
-        tasks: [bi("3 mock interviews", "3 buổi mock"), bi("Compare with your Day 1 recording", "So sánh với bản ghi âm Ngày 1")],
+        title: bi("Compare with day 1", "So sánh với Ngày 1"),
+        tasks: [
+          bi("Record the same 2-minute introduction again", "Ghi lại đúng bài giới thiệu 2 phút"),
+          bi("Compare it with your day 1 recording", "So sánh với bản ghi Ngày 1"),
+        ],
+      },
+      security: {
+        title: bi("Polish the public review", "Hoàn thiện bản review công khai"),
+        tasks: [
+          bi("Update piece D with what you learned", "Cập nhật sản phẩm D với những gì đã học"),
+          bi("Add your review service to your profile", "Thêm dịch vụ review vào profile"),
+        ],
       },
       interview: {
         title: bi("Final mock", "Mock cuối"),
         tasks: [
-          bi("Full mock: technical + behavioral", "Mock đầy đủ: kỹ thuật + behavioral"),
+          bi("Full mock: technical plus client conversation", "Mock đầy đủ: kỹ thuật và trao đổi với client"),
           bi("Lock in your model answers", "Chốt bộ câu trả lời mẫu"),
         ],
       },
       upwork: {
-        title: bi("Apply + negotiate", "Ứng tuyển + đàm phán"),
+        title: bi("Re-price and read your numbers", "Đặt lại giá và đọc số liệu"),
         tasks: [
-          bi("Send proposals for long-term jobs", "Gửi proposal cho job dài hạn"),
-          bi("Practice negotiating rate and contract", "Luyện đàm phán rate và hợp đồng"),
+          bi("Review your 12 weeks of proposal and client data", "Xem lại dữ liệu proposal và client của 12 tuần"),
+          bi("Set your next rate from the data", "Đặt mức giá tiếp theo dựa trên dữ liệu"),
+          bi("Send 5 tailored proposals", "Gửi 5 proposal viết riêng"),
         ],
         links: [L.upwork],
+      },
+      review: {
+        title: bi("Review the channels for 2027", "Review các kênh cho 2027"),
+        tasks: [
+          bi("Compare total hours with the plan", "So tổng giờ học với kế hoạch"),
+          bi(
+            "If there is no Upwork contract 5 months after the first bid, shift priority to Arc.dev and direct applications",
+            "Nếu 5 tháng sau lần bid đầu vẫn chưa có hợp đồng Upwork, chuyển ưu tiên sang Arc.dev và nộp trực tiếp",
+          ),
+          bi(
+            "Set the Solana stop-loss: if there is no paid contract, grant or offer by 30/06/2027, drop Solana to maintenance",
+            "Đặt stop-loss Solana: đến 30/06/2027 chưa có hợp đồng, grant hay offer trả tiền thì hạ Solana xuống mức duy trì",
+          ),
+        ],
       },
     },
   },
   {
     week: 15,
     focus: {
-      rust: {
+      evm: {
         title: bi("100-day wrap-up", "Tổng kết 100 ngày"),
         tasks: [
           bi("Finalize the CV", "Chốt CV bản cuối"),
-          bi("Check the 4 GitHub repos", "Kiểm tra 4 repo trên GitHub"),
+          bi("Check all 6 portfolio pieces", "Kiểm tra cả 6 sản phẩm portfolio"),
           bi("Write a 100-day retrospective", "Viết bài tổng kết 100 ngày"),
         ],
       },
-      solidity: {
-        title: bi("Solidity wrap-up", "Tổng kết Solidity"),
-        tasks: [
-          bi("List what you upgraded", "Liệt kê kiến thức đã nâng cấp"),
-          bi("Pick 3 technical stories for interviews", "Chọn 3 câu chuyện kỹ thuật để kể khi phỏng vấn"),
-        ],
+      security: {
+        title: bi("Security wrap-up", "Tổng kết security"),
+        tasks: [bi("List what you can now sell as a review service", "Liệt kê những gì đã bán được dưới dạng dịch vụ review")],
       },
       english: {
         title: bi("English wrap-up", "Tổng kết English"),
-        tasks: [bi("Record your final self-intro, compare with Day 1", "Ghi âm bài giới thiệu cuối cùng, so với Ngày 1")],
+        tasks: [bi("Set your English goal for the next 100 days", "Đặt mục tiêu tiếng Anh cho 100 ngày tiếp theo")],
       },
     },
   },
 ];
 
-/** Sunday 15:00–16:00 of every week after the kickoff week. */
+/** Sunday 15:00–16:00 of every week without its own review focus. */
 export const REVIEW_FOCUS: Focus = {
   title: bi("Weekly review", "Review tuần"),
   tasks: [
     bi("Compare total hours with the plan", "So tổng giờ học với kế hoạch"),
+    bi("Read your proposal and market numbers", "Đọc số liệu proposal và thị trường của bạn"),
     bi("Carry unfinished work to next week", "Dời việc chưa xong sang tuần sau"),
-    bi("Write down 3 things you learned this week", "Ghi 3 điều học được trong tuần"),
     bi("Pick next week's top 3 priorities", "Chọn 3 ưu tiên cho tuần sau"),
   ],
 };

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Plan01 · 100 days",
     short_name: "Plan01",
-    description: "100-day study plan: Rust, Solidity, English and Upwork.",
+    description: "100-day plan to win blockchain work on Upwork.",
     start_url: "/",
     display: "standalone",
     background_color: "#f7f4f1",

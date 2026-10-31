@@ -25,7 +25,17 @@ import {
   type PlanProgress,
 } from "@/lib/plan-progress";
 import { rewardAt } from "@/lib/rewards";
-import { dayMinutes, focusFor, phaseOf, planDayFor, quoteFor, slotsFor, trackById, weekOf } from "@/lib/schedule";
+import {
+  courseDayOn,
+  dayMinutes,
+  focusFor,
+  phaseOf,
+  planDayFor,
+  quoteFor,
+  slotsFor,
+  trackById,
+  weekOf,
+} from "@/lib/schedule";
 import { stagger } from "@/lib/style";
 import { currentLevel } from "@/lib/xp";
 import FerrisQuote from "./FerrisQuote";
@@ -34,11 +44,12 @@ import { CheckIcon } from "./icons";
 import LinkList from "./LinkList";
 import TrackIcon from "./TrackIcon";
 
-/** Rust slots on plan days 1–7 follow the matching day of the Rust course. */
-function CourseSlotInfo({ day, progress }: { day: number; progress: CourseProgress }) {
+/** The first Rust slots of the plan each study one day of the Rust course. */
+function CourseSlotInfo({ planDay, progress }: { planDay: number; progress: CourseProgress }) {
   const { t, tr } = useI18n();
-  const courseDay = course.days[day - 1];
-  if (!courseDay) return null;
+  const dayNumber = courseDayOn(planDay);
+  if (dayNumber === null) return null;
+  const courseDay = course.days[dayNumber - 1];
   const stats = getDayStats(courseDay, progress);
   return (
     <div className="course-link">
@@ -63,7 +74,7 @@ type SlotCardProps = {
   day: number;
   slot: Slot;
   index: number;
-  /** An earlier slot of the same track that day (weekend Rust 16:00); it carries the checklist. */
+  /** An earlier slot of the same track that day (Saturday EVM 16:00); it carries the checklist. */
   firstOfTrack: Slot | null;
   progress: PlanProgress;
   courseProgress: CourseProgress;
@@ -140,9 +151,7 @@ function SlotCard({ day, slot, index, firstOfTrack, progress, courseProgress, is
       ) : (
         showBody && (
           <>
-            {slot.track === "rust" && day <= course.days.length && (
-              <CourseSlotInfo day={day} progress={courseProgress} />
-            )}
+            {slot.track === "rust" && <CourseSlotInfo planDay={day} progress={courseProgress} />}
             {focus && (
               <>
                 <p className="weekly-hint">{t.day.weeklyHint}</p>

@@ -7,12 +7,12 @@ import { formatStudyDate, useToday } from "@/lib/dates";
 import { useCourseProgress } from "@/lib/course-progress";
 import { getDayStats } from "@/lib/course-stats";
 import { useI18n } from "@/lib/i18n";
-import { planDayFor } from "@/lib/schedule";
+import { courseDayOn, planDayFor, planDayOfCourseDay } from "@/lib/schedule";
 import CourseDay from "./CourseDay";
 import CourseOverview from "./CourseOverview";
 import CourseTabs from "./CourseTabs";
 
-/** The 85-video Rust course, studied in the Rust slots of plan days 1–7. */
+/** The 85-video Rust course, one course day per Rust slot from plan day 1. */
 export default function RustCourse() {
   const progress = useCourseProgress();
   const startDate = START_DATE;
@@ -22,8 +22,7 @@ export default function RustCourse() {
 
   const stats = course.days.map((day) => getDayStats(day, progress));
   const todayPlanDay = today ? planDayFor(startDate, today) : null;
-  const todayDay =
-    todayPlanDay !== null && todayPlanDay >= 1 && todayPlanDay <= course.days.length ? todayPlanDay : null;
+  const todayDay = todayPlanDay === null ? null : courseDayOn(todayPlanDay);
   const firstOpenDay = course.days.find((_, i) => !stats[i].complete)?.day ?? 1;
   const day = course.days[(pickedDay ?? todayDay ?? firstOpenDay) - 1];
 
@@ -35,7 +34,7 @@ export default function RustCourse() {
         key={day.day}
         day={day}
         progress={progress}
-        dateLabel={formatStudyDate(startDate, day.day - 1, lang)}
+        dateLabel={formatStudyDate(startDate, planDayOfCourseDay(day.day) - 1, lang)}
         isToday={todayDay === day.day}
       />
     </div>

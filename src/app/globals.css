@@ -17,7 +17,8 @@
   --on-success: #ffffff;
   --danger: #b91c1c;
   --c-rust: #c2410c;
-  --c-solidity: #4f46e5;
+  --c-evm: #4f46e5;
+  --c-security: #be123c;
   --c-english: #0f766e;
   --c-interview: #a21caf;
   --c-upwork: #0369a1;
@@ -50,7 +51,8 @@
     --on-success: #0b2a17;
     --danger: #f87171;
     --c-rust: #fb923c;
-    --c-solidity: #a5b4fc;
+    --c-evm: #a5b4fc;
+    --c-security: #fda4af;
     --c-english: #5eead4;
     --c-interview: #f0abfc;
     --c-upwork: #7dd3fc;
@@ -124,7 +126,8 @@ label {
 /* Track colours */
 
 .track-rust { --track: var(--c-rust); }
-.track-solidity { --track: var(--c-solidity); }
+.track-evm { --track: var(--c-evm); }
+.track-security { --track: var(--c-security); }
 .track-english { --track: var(--c-english); }
 .track-interview { --track: var(--c-interview); }
 .track-upwork { --track: var(--c-upwork); }
@@ -1924,10 +1927,8 @@ h3 {
 .trail-labels li {
   flex-basis: 0;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-size: 0.7rem;
+  line-height: 1.2;
   color: var(--muted);
 }
 

@@ -31,10 +31,16 @@ export default function TrackIcon({ track }: { track: TrackId }) {
   }
   return (
     <svg className="icon track-icon" viewBox="0 0 24 24" aria-hidden="true" {...stroke}>
-      {track === "solidity" && (
+      {track === "evm" && (
         <>
           <path d="M12 2.5 18 12l-6 3.6L6 12z" />
           <path d="M6 13.6 12 21.5l6-7.9-6 3.6z" />
+        </>
+      )}
+      {track === "security" && (
+        <>
+          <path d="M12 3 5 5.8v5.4c0 4.5 2.9 8 7 9.8 4.1-1.8 7-5.3 7-9.8V5.8z" />
+          <path d="m9 12 2.2 2.2L15.2 10" />
         </>
       )}
       {track === "english" && (

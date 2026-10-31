@@ -16,7 +16,7 @@ const beVietnamPro = Be_Vietnam_Pro({
 export const metadata: Metadata = {
   title: { default: "Plan01 · 100 days", template: "%s · Plan01" },
   description:
-    "A 100-day study plan: Rust (Solana, core chain / Layer 2), Solidity, English and Upwork, with daily slots, weekly checklists and progress tracking.",
+    "A 100-day plan to win blockchain work on Upwork: full-stack EVM, Rust and Solana, security review and client English, with daily slots, weekly checklists and progress tracking.",
   appleWebApp: { title: "Plan01", statusBarStyle: "default" },
 };
 

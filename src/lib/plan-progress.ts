@@ -15,7 +15,7 @@ function parsePlanProgress(value: unknown): PlanProgress {
 }
 
 export const planStore = createLocalStore<PlanProgress>(
-  "plan01:plan:v4",
+  "plan01:plan:v5",
   { slots: {}, tasks: {}, notes: {} },
   parsePlanProgress,
 );

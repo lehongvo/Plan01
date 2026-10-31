@@ -19,7 +19,7 @@ import {
   weekOf,
 } from "@/lib/schedule";
 
-const WEEK_TRACKS: TrackId[] = ["rust", "solidity", "english", "interview", "upwork"];
+const WEEK_TRACKS: TrackId[] = ["evm", "rust", "security", "english", "interview", "upwork"];
 
 export default function Roadmap() {
   const { lang, t, tr } = useI18n();

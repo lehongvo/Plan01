@@ -1,3 +1,4 @@
+import { course } from "@/data/course";
 import {
   PHASES,
   REVIEW_FOCUS,
@@ -40,11 +41,25 @@ export function planWeeks(startDate: string) {
 
 /** Study slots for a plan day, by its calendar weekday. */
 export function slotsFor(day: number, startDate: string): Slot[] {
-  const dow = (weekdayOf(startDate) + day - 1) % 7;
-  if (dow === 6) return SLOTS.saturday;
-  if (dow === 0) return SLOTS.sunday;
-  return SLOTS.weekday;
+  return SLOTS[(weekdayOf(startDate) + day - 1) % 7];
 }
+
+/** Plan days of the Rust course: course day k runs on the k-th plan day with a Rust slot. */
+const COURSE_PLAN_DAYS = DAYS.filter((day) => slotsFor(day, START_DATE).some((slot) => slot.track === "rust")).slice(
+  0,
+  course.days.length,
+);
+
+/** Course day studied on a plan day, or null if that day has no course session. */
+export function courseDayOn(planDay: number) {
+  const index = COURSE_PLAN_DAYS.indexOf(planDay);
+  return index === -1 ? null : index + 1;
+}
+
+export const planDayOfCourseDay = (courseDay: number) => COURSE_PLAN_DAYS[courseDay - 1];
+
+/** Next plan day with a course session after this one, if any is left. */
+export const nextCoursePlanDay = (planDay: number) => COURSE_PLAN_DAYS.find((day) => day > planDay);
 
 export const hasSlot = (week: number, track: TrackId, startDate: string) =>
   daysOfWeek(week, startDate).some((day) => slotsFor(day, startDate).some((slot) => slot.track === track));
