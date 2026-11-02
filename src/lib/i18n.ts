@@ -22,7 +22,7 @@ const en = {
     thisWeek: "This week",
     autosave: "Saved automatically",
     day: (n: number) => `Day ${n}`,
-    week: (n: number) => (n === 0 ? "Kickoff day" : n === 15 ? "Wrap-up day" : `Week ${n}`),
+    week: (n: number) => (n === 0 ? "Kickoff day" : n === 15 ? "Wrap-up" : `Week ${n}`),
     phase: (n: number, title: string) => `Phase ${n}: ${title}`,
   },
   footer: {
@@ -99,7 +99,7 @@ const en = {
   roadmap: {
     title: "100-day roadmap",
     jump: "Jump to this week",
-    lead: (weeks: number) => `4 phases, ${weeks} weeks (Monday to Sunday). Click a day to open its detailed schedule.`,
+    lead: "4 phases, with weeks running Monday to Sunday. Click a day to open its detailed schedule.",
     phaseDays: (n: number, first: number, last: number) => `Phase ${n} · Days ${first}–${last}`,
     fullDays: (done: number, total: number) => `${done}/${total} full days`,
   },
@@ -177,7 +177,7 @@ const vi: Messages = {
     thisWeek: "Tuần này",
     autosave: "Tự động lưu",
     day: (n) => `Ngày ${n}`,
-    week: (n) => (n === 0 ? "Ngày khởi động" : n === 15 ? "Ngày tổng kết" : `Tuần ${n}`),
+    week: (n) => (n === 0 ? "Ngày khởi động" : n === 15 ? "Tổng kết" : `Tuần ${n}`),
     phase: (n, title) => `Giai đoạn ${n}: ${title}`,
   },
   footer: {
@@ -254,7 +254,7 @@ const vi: Messages = {
   roadmap: {
     title: "Lộ trình 100 ngày",
     jump: "Tới tuần này",
-    lead: (weeks) => `4 giai đoạn, ${weeks} tuần (Thứ Hai đến Chủ nhật). Bấm vào một ngày để mở lịch chi tiết của ngày đó.`,
+    lead: "4 giai đoạn, mỗi tuần tính từ Thứ Hai đến Chủ nhật. Bấm vào một ngày để mở lịch chi tiết của ngày đó.",
     phaseDays: (n, first, last) => `Giai đoạn ${n} · Ngày ${first}–${last}`,
     fullDays: (done, total) => `${done}/${total} ngày trọn vẹn`,
   },

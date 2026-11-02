@@ -34,10 +34,10 @@ export type Phase = { id: number; title: string; firstWeek: number; lastWeek: nu
 
 export const TOTAL_DAYS = 100;
 /**
- * Day 1 is Sunday 01/11/2026, so day 100 is Monday 08/02/2027. The kickoff day, the phase
+ * Day 1 is Tuesday 03/11/2026, so day 100 is Wednesday 10/02/2027. The kickoff day, the phase
  * boundaries and the Rust course split are calibrated for this start, so it is fixed.
  */
-export const START_DATE = "2026-11-01";
+export const START_DATE = "2026-11-03";
 
 export const TRACKS: Track[] = [
   {
@@ -251,7 +251,7 @@ const clientWorkFirst = bi(
 
 export const WEEKS: Week[] = [
   {
-    // Day 1, Sunday 01/11: the kickoff before the first Monday.
+    // Day 1, Tuesday 03/11: the kickoff. The rest of that calendar week is week 1.
     week: 0,
     focus: {
       rust: {
@@ -259,23 +259,13 @@ export const WEEKS: Week[] = [
         tasks: [
           bi("Follow Rust course day 1 on the course page", "Học Khoá Rust ngày 1 trên trang khoá học"),
           bi("Create a GitHub repo for your 100-day code and notes", "Tạo repo GitHub cho code và ghi chú 100 ngày"),
+          bi(
+            "Read the roadmap and block the study slots in your calendar",
+            "Đọc lộ trình và chặn các khung giờ học trên lịch",
+          ),
+          bi("Commit to one rule: never miss two days in a row", "Cam kết một quy tắc: không bỏ 2 ngày liên tiếp"),
         ],
         links: [L.rustCourse, L.rustBook],
-      },
-      interview: {
-        title: bi("Upwork job research & baseline", "Tìm hiểu job Upwork & đánh giá xuất phát điểm"),
-        tasks: [
-          bi(
-            "Read 20 real blockchain jobs on Upwork and note what clients ask for",
-            "Đọc 20 job blockchain thật trên Upwork, ghi lại client đang cần gì",
-          ),
-          bi(
-            "Start a market log: search, job count, client spend, rate, proposals",
-            "Bắt đầu log thị trường: từ khoá, số job, spend của client, rate, số proposal",
-          ),
-          bi("Rate yourself 1–5 on each skill clients ask for", "Tự chấm 1–5 cho từng kỹ năng client yêu cầu"),
-        ],
-        links: [L.upwork],
       },
       english: {
         title: bi("Baseline recording", "Ghi âm xuất phát điểm"),
@@ -285,21 +275,10 @@ export const WEEKS: Week[] = [
             "Ghi âm 2 phút “Tell me about yourself” với trình độ hiện tại",
           ),
           bi("Write down the words and phrases you got stuck on", "Ghi lại các từ và cụm từ bị vấp"),
-          bi("Keep this recording to compare on day 100", "Giữ bản ghi này để so sánh vào Ngày 100"),
+          bi("Keep this recording to compare in the wrap-up", "Giữ bản ghi này để so sánh lúc tổng kết"),
         ],
       },
-      review: {
-        title: bi("Plan the 100 days", "Lên kế hoạch 100 ngày"),
-        tasks: [
-          bi("Read the roadmap and the goal of each phase", "Đọc lộ trình và mục tiêu từng giai đoạn"),
-          bi(
-            "Set a 4:45 AM alarm and block the study slots in your calendar",
-            "Đặt báo thức 4:45 sáng và chặn các khung giờ học trên lịch",
-          ),
-          bi("Commit to one rule: never miss two days in a row", "Cam kết một quy tắc: không bỏ 2 ngày liên tiếp"),
-        ],
-      },
-      evm: {
+      security: {
         title: bi("Kickoff: safe dev setup", "Khởi động: môi trường dev an toàn"),
         tasks: [
           bi("Install Foundry (foundryup), run forge init and forge test", "Cài Foundry (foundryup), chạy forge init và forge test"),
@@ -366,11 +345,16 @@ export const WEEKS: Week[] = [
             "Practise a polite refusal to run an unknown repo; offer screen-share in a VM or your public repo",
             "Tập từ chối lịch sự khi bị yêu cầu chạy repo lạ; đề xuất screen-share trong VM hoặc dùng repo public của bạn",
           ),
+          bi("Rate yourself 1–5 on each skill clients ask for", "Tự chấm 1–5 cho từng kỹ năng client yêu cầu"),
         ],
       },
       upwork: {
         title: bi("Fix the CV + set up your profile", "Sửa CV + dựng profile"),
         tasks: [
+          bi(
+            "Read 20 real blockchain jobs and start your market log: search, job count, Connects, client spend, rate, proposals",
+            "Đọc 20 job blockchain thật và bắt đầu log thị trường: từ khoá, số job, Connects, spend của client, rate, số proposal",
+          ),
           bi(
             "Fix the CV from the review: contact info, timeline, typos",
             "Sửa CV theo bản review: thông tin liên hệ, mốc thời gian, lỗi chính tả",
@@ -389,7 +373,6 @@ export const WEEKS: Week[] = [
             "Ask a tax professional about VAT and PIT on Upwork income, and the VAT ID banner",
             "Hỏi chuyên gia thuế về VAT, PIT trên thu nhập Upwork và thông báo VAT ID",
           ),
-          marketLog,
         ],
         links: [L.upwork],
       },
@@ -408,11 +391,10 @@ export const WEEKS: Week[] = [
         links: [L.wagmi, L.viem, L.nextjs, L.foundry],
       },
       rust: {
-        title: bi("Finish the course + Rust Book ch.15–16", "Hoàn thành khoá học + Rust Book ch.15–16"),
+        title: bi("Finish the course + Rust Book ch.15", "Hoàn thành khoá học + Rust Book ch.15"),
         tasks: [
-          bi("Finish course days 6–7 (Tuesday and Thursday)", "Xong ngày 6–7 của khoá (Thứ Ba và Thứ Năm)"),
+          bi("Finish course days 5–7 (Tuesday, Thursday, Saturday)", "Xong ngày 5–7 của khoá (Thứ Ba, Thứ Năm, Thứ Bảy)"),
           "Rust Book ch.15: Box, Rc, RefCell",
-          "Rust Book ch.16: threads, channels, Mutex, Arc",
           bi("Finish the remaining Rustlings", "Làm nốt phần Rustlings còn lại"),
         ],
         links: [L.rustCourse, L.rustBook, L.rustlings],
@@ -483,12 +465,13 @@ export const WEEKS: Week[] = [
       rust: {
         title: bi("Practice: a Rust CLI project", "Thực hành: project Rust CLI"),
         tasks: [
-          bi("Exercism Rust: 10 exercises", "Exercism Rust: 10 bài"),
+          "Rust Book ch.16: threads, channels, Mutex, Arc",
+          bi("Exercism Rust: 6 exercises", "Exercism Rust: 6 bài"),
           bi("Error handling with thiserror / anyhow", "Error handling với thiserror / anyhow"),
           bi("Tests + cargo clippy + cargo fmt", "Test + cargo clippy + cargo fmt"),
           bi("CLI that reads blocks over RPC, with a README", "CLI đọc block qua RPC, có README"),
         ],
-        links: [L.exercism, L.clippy, L.tokio],
+        links: [L.rustBook, L.exercism, L.clippy, L.tokio],
       },
       english: {
         title: bi("Upwork video interview practice", "Luyện video interview trên Upwork"),
@@ -1079,10 +1062,10 @@ export const WEEKS: Week[] = [
         links: [L.clippy, L.matterLabs],
       },
       english: {
-        title: bi("Compare with day 1", "So sánh với Ngày 1"),
+        title: bi("Final mock client call", "Buổi gọi thử cuối với client"),
         tasks: [
-          bi("Record the same 2-minute introduction again", "Ghi lại đúng bài giới thiệu 2 phút"),
-          bi("Compare it with your day 1 recording", "So sánh với bản ghi Ngày 1"),
+          bi("One call with a real English speaker", "Một buổi gọi với người nói tiếng Anh thật"),
+          bi("List the phrases you still get stuck on and practise them", "Ghi các cụm từ vẫn còn vấp và luyện lại"),
         ],
       },
       security: {
@@ -1137,11 +1120,25 @@ export const WEEKS: Week[] = [
       },
       security: {
         title: bi("Security wrap-up", "Tổng kết security"),
-        tasks: [bi("List what you can now sell as a review service", "Liệt kê những gì đã bán được dưới dạng dịch vụ review")],
+        tasks: [
+          bi("List what you can now sell as a review service", "Liệt kê những gì đã bán được dưới dạng dịch vụ review"),
+          bi("Update your review checklist with what you learned", "Cập nhật checklist review với những gì đã học"),
+        ],
+      },
+      rust: {
+        title: bi("Rust wrap-up", "Tổng kết Rust"),
+        tasks: [
+          bi("List the Rust and Solana skills you can now sell", "Liệt kê các kỹ năng Rust và Solana đã bán được"),
+          bi("Use your market log to set your 2027 Rust plan", "Dựa vào log thị trường để đặt kế hoạch Rust cho 2027"),
+        ],
       },
       english: {
-        title: bi("English wrap-up", "Tổng kết English"),
-        tasks: [bi("Set your English goal for the next 100 days", "Đặt mục tiêu tiếng Anh cho 100 ngày tiếp theo")],
+        title: bi("Compare with day 1", "So sánh với Ngày 1"),
+        tasks: [
+          bi("Record the same 2-minute introduction again", "Ghi lại đúng bài giới thiệu 2 phút"),
+          bi("Compare it with your day 1 recording", "So sánh với bản ghi Ngày 1"),
+          bi("Set your English goal for the next 100 days", "Đặt mục tiêu tiếng Anh cho 100 ngày tiếp theo"),
+        ],
       },
     },
   },

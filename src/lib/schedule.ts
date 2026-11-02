@@ -24,12 +24,12 @@ const mondayIndex = (startDate: string) => (weekdayOf(startDate) + 6) % 7;
 
 /**
  * Plan weeks follow calendar weeks (Monday–Sunday), so the Sunday interview,
- * mock and review slots always come after that week's learning. Days before
- * the first Monday form week 0, the kickoff (just day 1 for a Sunday start).
+ * mock and review slots always come after that week's learning. Day 1 is the
+ * kickoff, week 0; the rest of its calendar week is week 1.
  */
 export function weekOf(day: number, startDate: string) {
-  const offset = mondayIndex(startDate);
-  return Math.floor((offset + day - 1) / 7) + (offset === 0 ? 1 : 0);
+  if (day === 1) return 0;
+  return Math.floor((mondayIndex(startDate) + day - 1) / 7) + 1;
 }
 
 export const daysOfWeek = (week: number, startDate: string) => DAYS.filter((day) => weekOf(day, startDate) === week);

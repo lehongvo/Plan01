@@ -27,7 +27,7 @@ export type Course = {
 };
 
 // Video ids, titles and durations come from the YouTube playlist metadata. Course day k runs on the
-// k-th plan day with a Rust slot (Sun 01/11 to Thu 12/11), so each course day fits one 3h slot.
+// k-th plan day with a Rust slot (Tue 03/11 to Sat 14/11), so each course day fits one 3h slot.
 export const course: Course = {
   "title": "Rust for beginners (2025)",
   "channel": "Rustfully",
