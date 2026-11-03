@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { course, type StudyDay, type Video } from "@/data/course";
+import { CODE_RANGE, codeUrl, course, type StudyDay, type Video } from "@/data/course";
 import { PLAYBACK_RATES, courseActions, courseTaskKey, type CourseProgress } from "@/lib/course-progress";
 import { getDayStats, nextUnwatched } from "@/lib/course-stats";
 import { formatClock, formatMinutes } from "@/lib/dates";
@@ -34,6 +34,7 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
     nonce: 0,
   };
   const current = day.videos.find((v) => v.id === request.videoId) ?? day.videos[0];
+  const currentCode = codeUrl(current);
 
   function play(videoId: string) {
     setPicked((prev) => ({ videoId, autoplay: true, nonce: (prev?.nonce ?? 0) + 1 }));
@@ -120,6 +121,16 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
                     YouTube
                     <ExternalIcon />
                   </a>
+                  <a
+                    className="button"
+                    href={currentCode ?? course.repo}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={currentCode && current.lesson !== null ? t.course.codeFor(current.lesson) : t.course.noCode}
+                  >
+                    {currentCode ? t.course.code : t.course.repo}
+                    <ExternalIcon />
+                  </a>
                 </div>
               </div>
             </div>
@@ -135,6 +146,7 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
               {day.videos.map((video) => {
                 const watched = Boolean(progress.watched[video.id]);
                 const active = video.id === current.id;
+                const code = codeUrl(video);
                 return (
                   <li
                     key={video.id}
@@ -161,6 +173,17 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
                         {active ? <span className="playing">{t.course.nowPlaying}</span> : formatClock(video.seconds)}
                       </span>
                     </button>
+                    {code && video.lesson !== null && (
+                      <a
+                        className="video-code"
+                        href={code}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={t.course.codeFor(video.lesson)}
+                      >
+                        {t.course.code}
+                      </a>
+                    )}
                   </li>
                 );
               })}
@@ -222,7 +245,9 @@ export default function CourseDay({ day, progress, dateLabel, isToday }: Props) 
             <div className="card-head">
               <h3>{t.course.resources}</h3>
             </div>
-            <LinkList links={day.links} />
+            <LinkList
+              links={[{ label: t.course.repoLink(CODE_RANGE.first, CODE_RANGE.last), url: course.repo }, ...day.links]}
+            />
           </div>
         </aside>
       </div>

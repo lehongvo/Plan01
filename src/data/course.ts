@@ -23,6 +23,8 @@ export type Course = {
   title: string;
   channel: string;
   playlist: string;
+  /** Companion code repo: a learner's code for the same videos, not published by the channel. */
+  repo: string;
   days: StudyDay[];
 };
 
@@ -32,6 +34,7 @@ export const course: Course = {
   "title": "Rust for beginners (2025)",
   "channel": "Rustfully",
   "playlist": "https://www.youtube.com/playlist?list=PLAscMa3kKhHjBYOTrT20kpYMNQX95KU6i",
+  "repo": "https://github.com/YP-Learning/rustfully",
   "days": [
     {
       "day": 1,
@@ -828,3 +831,34 @@ export const course: Course = {
     }
   ]
 };
+
+/**
+ * Lesson folders in the companion repo. It stops at lesson 12 (last push 26/12/2025); add a line
+ * here when it gains more folders.
+ */
+const CODE_FOLDERS: Record<number, string> = {
+  0: "00-hello-world",
+  1: "01-getting-started",
+  2: "02-guessing-game",
+  3: "03-variables",
+  4: "04-variable-shadowing",
+  5: "05-datatypes",
+  6: "06-integers",
+  7: "07-float",
+  8: "08-bool-char",
+  9: "09-tuples",
+  10: "10-arrays",
+  11: "11-functions",
+  12: "12-function-annotations",
+};
+
+const codeLessons = Object.keys(CODE_FOLDERS).map(Number);
+
+/** First and last lesson with a folder in the repo. */
+export const CODE_RANGE = { first: Math.min(...codeLessons), last: Math.max(...codeLessons) };
+
+/** GitHub folder with the code for this video, or null if the repo has none. */
+export function codeUrl(video: Video) {
+  const folder = video.lesson === null ? undefined : CODE_FOLDERS[video.lesson];
+  return folder ? `${course.repo}/tree/main/${folder}` : null;
+}

@@ -1097,8 +1097,13 @@ h3 {
 
 .player-buttons {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
+}
+
+/* Phones: "Watched, next" gets its own row, YouTube and the code link share the next one. */
+.player-buttons .button-primary {
+  grid-column: 1 / -1;
 }
 
 .speed {
@@ -1194,6 +1199,21 @@ h3 {
 .playing {
   color: var(--accent);
   font-weight: 700;
+}
+
+.video-code {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 /* Footer */
@@ -2323,6 +2343,14 @@ h3 {
     display: inline-grid;
   }
 
+  .player-buttons {
+    grid-template-columns: auto auto auto;
+  }
+
+  .player-buttons .button-primary {
+    grid-column: auto;
+  }
+
   .speed button {
     padding: 0 10px;
   }
@@ -2468,6 +2496,10 @@ h3 {
 
   .video-row:not(.is-active):hover {
     background: var(--surface-2);
+  }
+
+  .video-code:hover {
+    border-color: var(--accent);
   }
 }
 

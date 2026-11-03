@@ -151,6 +151,11 @@ const en = {
     playerFailed: "Couldn't load the YouTube player.",
     videoBlocked: (code: number) => `This video can't play inside the page (error ${code}).`,
     openOnYoutube: "Open on YouTube",
+    code: "Code",
+    repo: "Repo",
+    codeFor: (n: number) => `Code for lesson ${n} on GitHub`,
+    noCode: "The repo has no code for this video yet. Opens the repo on GitHub",
+    repoLink: (first: number, last: number) => `Code from the videos on GitHub (lessons ${first}–${last})`,
   },
   celebrate: {
     xp: (n: number) => `+${n} XP`,
@@ -305,6 +310,11 @@ const vi: Messages = {
     playerFailed: "Không tải được trình phát YouTube.",
     videoBlocked: (code) => `Video này không phát được trong trang (mã lỗi ${code}).`,
     openOnYoutube: "Mở trên YouTube",
+    code: "Code",
+    repo: "Repo",
+    codeFor: (n) => `Code bài ${n} trên GitHub`,
+    noCode: "Repo chưa có code cho video này. Mở repo trên GitHub",
+    repoLink: (first, last) => `Code theo video trên GitHub (bài ${first}–${last})`,
   },
   celebrate: {
     xp: (n) => `+${n} XP`,
