@@ -8,6 +8,9 @@ type YTPlayer = {
   loadVideoById(videoId: string): void;
   cueVideoById(videoId: string): void;
   setPlaybackRate(rate: number): void;
+  getPlayerState(): number;
+  getCurrentTime(): number;
+  seekTo(seconds: number, allowSeekAhead: boolean): void;
   destroy(): void;
 };
 
@@ -34,6 +37,13 @@ declare global {
     onYouTubeIframeAPIReady?: () => void;
   }
 }
+
+// YouTube rounds any faster speed down to 2×. Faster speeds play at 2× and
+// skip ahead by the missing video time once per interval.
+const NATIVE_MAX_RATE = 2;
+const SKIP_INTERVAL_MS = 1000;
+
+const nativeRate = (rate: number) => Math.min(rate, NATIVE_MAX_RATE);
 
 let apiPromise: Promise<YTNamespace> | null = null;
 
@@ -83,7 +93,7 @@ export default function YouTubePlayer({ request, rate, onEnded }: Props) {
   });
   const handleEnded = useEffectEvent(() => onEnded(request.videoId));
   const handleError = useEffectEvent((code: number) => setError({ videoId: request.videoId, code }));
-  const applyRate = useEffectEvent(() => playerRef.current?.setPlaybackRate(rate));
+  const applyRate = useEffectEvent(() => playerRef.current?.setPlaybackRate(nativeRate(rate)));
 
   // Create the player once. YouTube swaps the element it is given for an
   // iframe, so it gets a node React does not manage.
@@ -139,7 +149,18 @@ export default function YouTubePlayer({ request, rate, onEnded }: Props) {
   }, [ready, requestKey, request.videoId, request.autoplay]);
 
   useEffect(() => {
-    if (ready) playerRef.current?.setPlaybackRate(rate);
+    if (ready) playerRef.current?.setPlaybackRate(nativeRate(rate));
+  }, [ready, rate]);
+
+  useEffect(() => {
+    if (!ready || rate <= NATIVE_MAX_RATE) return;
+    const skip = (rate - NATIVE_MAX_RATE) * (SKIP_INTERVAL_MS / 1000);
+    const timer = setInterval(() => {
+      const player = playerRef.current;
+      if (!player || player.getPlayerState() !== window.YT?.PlayerState.PLAYING) return;
+      player.seekTo(player.getCurrentTime() + skip, true);
+    }, SKIP_INTERVAL_MS);
+    return () => clearInterval(timer);
   }, [ready, rate]);
 
   const youtubeUrl = `https://www.youtube.com/watch?v=${request.videoId}`;
