@@ -1,6 +1,6 @@
 import { createLocalStore, isRecord, readFlags, readTexts, withFlag } from "./local-store";
 
-export const PLAYBACK_RATES = [1, 1.25, 1.5, 1.75, 2, 3, 4];
+export const PLAYBACK_RATES = [1, 1.25, 1.5, 1.75, 2, 3, 4, 8];
 
 /** Progress through the 85-video Rust course. */
 export type CourseProgress = {
